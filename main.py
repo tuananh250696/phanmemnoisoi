@@ -6,10 +6,11 @@ import datetime
 import math
 import os
 import random
+from tkinter import ttk
 from PIL import ImageTk,Image
 
 
-conn = sqlite3.connect("H:\python IDE\CODE TEST\Database\store.db")
+conn = sqlite3.connect("Database\store.db")
 c = conn.cursor()
 
 # date
@@ -89,8 +90,39 @@ class Application:
         self.bt_thoat = Button(self.right, text="Đóng", width=15, height=2, font=('arial 12 bold'), bg='white',command=self.add_to_cart)
         self.bt_thoat.place(x=640, y=0)
 
+        self.tenbenhnhan = Label(self.bottom, text="Tên bệnh nhân:", font=('arial 12 bold'), fg='black',bg='lightblue')
+        self.tenbenhnhan.place(x=15, y=5)
+
+        self.name_p = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.name_p.place(x=5, y=30)
+
+        self.adr = Label(self.bottom, text="Địa chỉ:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.adr.place(x=15, y=75)
+
+        self.adr_p = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.adr_p.place(x=5, y=100)
+
+        self.year_b = Label(self.bottom, text="Năm sinh:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.year_b.place(x=15, y=150)
+
+        self.y_b = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.y_b.place(x=5, y=175)
+
+        self.tlpnb = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.tlpnb.place(x=465, y=30)
+
+        self.st = Label(self.bottom, text="Triệu chứng:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.st.place(x=470, y=75)
+
+        self.stom = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.stom.place(x=465, y=100)
 
 
+        self.sex = Label(self.bottom, text="Giới tính:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.sex.place(x=470, y=150)
+
+        self.chkbtn1 = Checkbutton(self.bottom, text='Nam',font=('arial 18 bold'),fg='black', bg='lightblue',takefocus=0).place(x=475, y=175)
+        self.chkbtn2 = Checkbutton(self.bottom, text='Nữ',font=('arial 18 bold'),fg='black', bg='lightblue',takefocus=0).place(x=600, y=175)
 
     def add_to_cart(self, *args, **kwargs):
         # get the quantity value and from the database
@@ -99,6 +131,22 @@ class Application:
         self.bt_save_file.destroy()
         self.bt_open_file.destroy()
         self.bt_add_patient.destroy()
+
+
+        self.tenbenhnhan.destroy()
+        self.name_p.destroy()
+        self.adr.destroy()
+        self.adr_p.destroy()
+        self.year_b.destroy()
+
+        self.y_b.destroy()
+        self.tlpnb.destroy()
+        self.st.destroy()
+        self.stom.destroy()
+        self.sex.destroy()
+        self.chkbtn1.destroy()
+        self.chkbtn2.destroy()
+        self.bottom.destroy()
 
     def quit(self):
         root.destroy()
@@ -192,6 +240,6 @@ class Application:
 
 b = Application(root)
 
-root.geometry("1366x768+0+0")
+root.geometry("1920x1080+0+0")
 root.mainloop()
 
