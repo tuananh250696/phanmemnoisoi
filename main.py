@@ -1,4 +1,3 @@
-# import all the modules
 from tkinter import *
 import sqlite3
 import tkinter.messagebox
@@ -37,12 +36,17 @@ class Application:
         # frame
         self.left = Frame(master, width=320, height=1300, bg='white')
         self.left.pack(side=LEFT)
-
         self.right = Frame(master, width=2100, height=53, bg='white')
         self.right.pack(side=TOP)
 
-        self.bottom = Frame(master, width=2100, height=1000, bg='lightblue')
+        self.bottom = Frame(master, width=2100, height=220, bg='lightblue')
         self.bottom.pack(side=TOP)
+
+        self.bottom1 = Frame(master, width=2100, height=60, bg='yellow')
+        self.bottom1.pack(side=TOP)
+        self.bottom2 = Frame(master, width=2100, height=1100, bg='white')
+        self.bottom2.pack(side=TOP)
+
 
         # components
         self.date_l = Label(self.left, text="Today's Date: " + str(date), font=('arial 16 bold'), bg='lightblue', fg='white')
@@ -68,11 +72,10 @@ class Application:
         self.bt_exit1.place(x=8, y=495)
 
 
-        self.master.bind("<Return>", self.ajax)
-        self.master.bind("<Up>", self.add_to_cart)
-        self.master.bind("<space>", self.generate_bill)
 
-    def ajax(self, *args, **kwargs):
+
+    def ajax(self,*args, **kwargs):
+
 
         # button control system
         self.bt_add_patient = Button(self.right, text="Thêm bệnh nhân", width=15, height=2, font=('arial 12 bold'), bg='white', command=self.ajax)
@@ -108,133 +111,115 @@ class Application:
         self.y_b = Entry(self.bottom, font=('arial 24 bold'), width=20)
         self.y_b.place(x=5, y=175)
 
-        self.tlpnb = Entry(self.bottom, font=('arial 24 bold'), width=20)
-        self.tlpnb.place(x=465, y=30)
+        self.job = Label(self.bottom, text="Nghề nghiệp:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.job.place(x=425, y=5)
+        self.jobw = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.jobw.place(x=410, y=30)
 
         self.st = Label(self.bottom, text="Triệu chứng:", font=('arial 12 bold'), fg='black', bg='lightblue')
-        self.st.place(x=470, y=75)
+        self.st.place(x=420, y=75)
 
         self.stom = Entry(self.bottom, font=('arial 24 bold'), width=20)
-        self.stom.place(x=465, y=100)
+        self.stom.place(x=410, y=100)
 
+        self.sbh = Label(self.bottom, text="Số bảo hiểm:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.sbh.place(x=420, y=150)
+
+        self.nbh = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.nbh.place(x=410, y=175)
 
         self.sex = Label(self.bottom, text="Giới tính:", font=('arial 12 bold'), fg='black', bg='lightblue')
-        self.sex.place(x=470, y=150)
+        self.sex.place(x=800, y=5)
+        #
+        var3 = IntVar()
+        var4 = IntVar()
+        self.chkbtn1 = Checkbutton(self.bottom, text='Nam', variable=var3, font=('arial 18 bold'), fg='black', bg='lightblue').place(x=810, y=25)
+        self.chkbtn2 = Checkbutton(self.bottom, text='Nữ', variable=var4, font=('arial 18 bold'), fg='black', bg='lightblue').place(x=900, y=25)
 
-        self.chkbtn1 = Checkbutton(self.bottom, text='Nam',font=('arial 18 bold'),fg='black', bg='lightblue',takefocus=0).place(x=475, y=175)
-        self.chkbtn2 = Checkbutton(self.bottom, text='Nữ',font=('arial 18 bold'),fg='black', bg='lightblue',takefocus=0).place(x=600, y=175)
+        self.seachinfo = Button(self.bottom1, text="Tìm kiếm", width=15, height=1, font=('arial 18 bold'), bg='orange',command=self.ajax)
+        self.seachinfo.place(x=800, y=5)
+
+        self.name_info = Label(self.bottom1, text="Tên:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.name_info.place(x=5, y=15)
+        self.name_infos = Entry(self.bottom1, font=('arial 18 bold'), width=15)
+        self.name_infos.place(x=55, y=10)
+
+        var1 = IntVar()
+        self.chkbtn3 =Checkbutton(self.bottom1, text="Nam", variable=var1, font=('arial 14 bold'), fg='black', bg='lightblue').place(x=260, y=10)
+        var2 = IntVar()
+        chkbtn4 =Checkbutton(self.bottom1, text="Nữ", variable=var2, font=('arial 14 bold'), fg='black', bg='lightblue').place(x=340, y=10)
+
+
+        self.date_s = Label(self.bottom1, text="Từ:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.date_s.place(x=420, y=15)
+        self.from_date = Entry(self.bottom1, font=('arial 18 bold'), width=8)
+        self.from_date.place(x=455, y=10)
+
+        self.date_s2 = Label(self.bottom1, text="Đến:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.date_s2.place(x=575, y=15)
+        self.from_todate = Entry(self.bottom1, font=('arial 18 bold'), width=8)
+        self.from_todate.place(x=620, y=10)
+
+        # infseach
+        self.s_stt = Label(self.bottom2, text="Stt", font=('arial 12 bold'), fg='black', bg='lightblue',width=5)
+        self.s_stt.place(x=5, y=5)
+        self.s_name = Label(self.bottom2, text="Họ và tên", font=('arial 12 bold'), fg='black', bg='lightblue', width=20)
+        self.s_name.place(x=65, y=5)
+        self.s_address = Label(self.bottom2, text="Địa chỉ", font=('arial 12 bold'), fg='black', bg='lightblue',width=25)
+        self.s_address.place(x=275, y=5)
+        self.s_sexgt = Label(self.bottom2, text="Giới tính", font=('arial 12 bold'), fg='black', bg='lightblue', width=8)
+        self.s_sexgt.place(x=535, y=5)
+        self.s_born = Label(self.bottom2, text="Tuổi", font=('arial 12 bold'), fg='black', bg='lightblue', width=8)
+        self.s_born.place(x=625, y=5)
+        self.s_job = Label(self.bottom2, text="Nghề nghiệp", font=('arial 12 bold'), fg='black', bg='lightblue', width=15)
+        self.s_job.place(x=715, y=5)
+        self.s_sbh = Label(self.bottom2, text="Số bảo hiểm", font=('arial 12 bold'), fg='black', bg='lightblue',width=10)
+        self.s_sbh.place(x=875, y=5)
+
+
+
 
     def add_to_cart(self, *args, **kwargs):
-        # get the quantity value and from the database
         self.bt_thoat.destroy()
         self.bt_delele1.destroy()
         self.bt_save_file.destroy()
         self.bt_open_file.destroy()
         self.bt_add_patient.destroy()
-
-
         self.tenbenhnhan.destroy()
         self.name_p.destroy()
         self.adr.destroy()
         self.adr_p.destroy()
         self.year_b.destroy()
-
+        self.job.destroy()
+        self.jobw.destroy()
+        self.sbh.destroy()
+        self.nbh.destroy()
         self.y_b.destroy()
-        self.tlpnb.destroy()
         self.st.destroy()
         self.stom.destroy()
         self.sex.destroy()
-        self.chkbtn1.destroy()
-        self.chkbtn2.destroy()
-        self.bottom.destroy()
+
+        self.seachinfo.destroy()
+        self.name_info.destroy()
+        self.name_infos.destroy()
+        self.date_s.destroy()
+        self.from_todate.destroy()
+        self.from_date.destroy()
+        self.date_s2.destroy()
+
+        self.s_stt .destroy()
+        self.s_name.destroy()
+        self.s_address.destroy()
+        self.s_sexgt.destroy()
+        self.s_job.destroy()
+        self.s_born.destroy()
+        self.s_sbh.destroy()
+
 
     def quit(self):
         root.destroy()
 
 
-
-    def change_func(self, *args, **kwargs):
-        # get the amount given by the customer and the amount generated by the computer
-        self.amount_given = float(self.change_e.get())
-        self.our_total = float(sum(product_price))
-
-        self.to_give = self.amount_given - self.our_total
-
-        # label change
-        self.c_amount = Label(self.left, text="Change: Rs. " + str(self.to_give), font=('arial 18 bold'), fg='red',
-                              bg='white')
-        self.c_amount.place(x=0, y=600)
-
-    def generate_bill(self, *args, **kwargs):
-        # create the bill before updating to the database.
-        #  directory = "D:/Store Management Software/Invoice/" + str(date) + "/"
-        directory = "D:\code examp\Store-Management-Software\print/"
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        # TEMPLATES FOR THE BILL
-        company = "\t\t\t\tBibek Company Pvt. Ltd.\n"
-        address = "\t\t\t\tKathmandu, Nepal\n"
-        phone = "\t\t\t\t\t99999999999\n"
-        sample = "\t\t\t\t\tInvoice\n"
-        dt = "\t\t\t\t\t" + str(date)
-
-        table_header = "\n\n\t\t\t---------------------------------------\n\t\t\tSN.\tProducts\t\tQty\t\tAmount\n\t\t\t---------------------------------------"
-        final = company + address + phone + sample + dt + "\n" + table_header
-
-        # open a file to write it to
-        file_name = str(directory) + str(random.randrange(5000, 10000)) + ".doc"
-        f = open(file_name, 'w')
-        f.write(final)
-
-        # fill dynamics
-        r = 1
-        i = 0
-        for t in products_list:
-            f.write("\n\t\t\t" + str(r) + "\t" + str(products_list[i] + ".......")[:7] + "\t\t" + str(
-                product_quantity[i]) + "\t\t" + str(product_price[i]))
-            i += 1
-            r += 1
-        f.write("\n\n\t\t\tTotal: Rs. " + str(sum(product_price)))
-        f.write("\n\t\t\tThanks for Visiting.")
-        os.startfile(file_name, "print")
-        f.close()
-        # decrease the stock
-        self.x = 0
-
-        initial = "SELECT * FROM inventory WHERE id=?"
-        result = c.execute(initial, (product_id[self.x],))
-
-        for i in products_list:
-            for r in result:
-                self.old_stock = r[2]
-            self.new_stock = int(self.old_stock) - int(product_quantity[self.x])
-
-            # updating the stock
-            sql = "UPDATE inventory SET stock=? WHERE id=?"
-            c.execute(sql, (self.new_stock, product_id[self.x]))
-            conn.commit()
-
-            # insert into the transaction
-            sql2 = "INSERT INTO transactions (product_name, quantity, amount, date) VALUES (?, ?, ?, ?)"
-            c.execute(sql2, (products_list[self.x], product_quantity[self.x], product_price[self.x], date))
-            conn.commit()
-
-            self.x += 1
-
-        for a in labels_list:
-            a.destroy()
-
-        del (products_list[:])
-        del (product_id[:])
-        del (product_quantity[:])
-        del (product_price[:])
-
-        self.total_l.configure(text="")
-        self.c_amount.configure(text="")
-        self.change_e.delete(0, END)
-        self.enteride.focus()
-        tkinter.messagebox.showinfo("Success", "Done everything smoothly")
 
 
 
@@ -242,4 +227,3 @@ b = Application(root)
 
 root.geometry("1920x1080+0+0")
 root.mainloop()
-
