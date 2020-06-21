@@ -7,6 +7,7 @@ import os
 import random
 from tkinter import ttk
 from PIL import ImageTk,Image
+import cv2
 
 
 conn = sqlite3.connect("Database\store.db")
@@ -27,26 +28,19 @@ root.title("COMPANY BOSSCCOM")
 labels_list = []
 image = PhotoImage(file="ngang1.png")
 img_resize = image.subsample(1, 1)
-Label(root, image=img_resize, bg="white", relief=SUNKEN).pack(pady=5)
+
 
 
 class Application:
     def __init__(self, master, *args, **kwargs):
         self.master = master
         # frame
+        self.left1 = Frame(master, width=1920, height=96, bg='white')
+        self.left1.pack(side=TOP)
+        Label(self.left1, image=img_resize, bg="white", relief=SUNKEN).pack(pady=5)
+
         self.left = Frame(master, width=320, height=1300, bg='white')
         self.left.pack(side=LEFT)
-        self.right = Frame(master, width=2100, height=53, bg='white')
-        self.right.pack(side=TOP)
-
-        self.bottom = Frame(master, width=2100, height=220, bg='lightblue')
-        self.bottom.pack(side=TOP)
-
-        self.bottom1 = Frame(master, width=2100, height=60, bg='yellow')
-        self.bottom1.pack(side=TOP)
-        self.bottom2 = Frame(master, width=2100, height=1100, bg='white')
-        self.bottom2.pack(side=TOP)
-
 
         # components
         self.date_l = Label(self.left, text="Today's Date: " + str(date), font=('arial 16 bold'), bg='lightblue', fg='white')
@@ -56,7 +50,7 @@ class Application:
         self.bt_st_catalog = Button(self.left, text="Hồ sơ bệnh nhân", width=18, height=2,  font=('arial 18 bold'),bg='orange', command=self.ajax)
         self.bt_st_catalog.place(x=8, y=45)
 
-        self.bt_st_form = Button(self.left, text="Nội soi", width=18, height=2,  font=('arial 18 bold'),bg='orange', command=self.ajax)
+        self.bt_st_form = Button(self.left, text="Nội soi", width=18, height=2,  font=('arial 18 bold'),bg='orange', command=self.endoscopy)
         self.bt_st_form.place(x=8, y=135)
 
         self.bt_patient = Button(self.left, text="Biểu mẫu in", width=18, height=2,  font=('arial 18 bold'),bg='orange', command=self.ajax)
@@ -71,11 +65,17 @@ class Application:
         self.bt_exit1 = Button(self.left, text="Thoát", width=18, height=2,  font=('arial 18 bold'),bg='orange', command=self.quit)
         self.bt_exit1.place(x=8, y=495)
 
-
-
-
     def ajax(self,*args, **kwargs):
+        self.right = Frame(root, width=2100, height=53, bg='white')
+        self.right.pack(side=TOP)
 
+        self.bottom = Frame(root, width=2100, height=220, bg='lightblue')
+        self.bottom.pack(side=TOP)
+
+        self.bottom1 = Frame(root, width=2100, height=60, bg='yellow')
+        self.bottom1.pack(side=TOP)
+        self.bottom2 = Frame(root, width=2100, height=1100, bg='white')
+        self.bottom2.pack(side=TOP)
 
         # button control system
         self.bt_add_patient = Button(self.right, text="Thêm bệnh nhân", width=15, height=2, font=('arial 12 bold'), bg='white', command=self.ajax)
@@ -141,6 +141,7 @@ class Application:
 
         self.name_info = Label(self.bottom1, text="Tên:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.name_info.place(x=5, y=15)
+
         self.name_infos = Entry(self.bottom1, font=('arial 18 bold'), width=15)
         self.name_infos.place(x=55, y=10)
 
@@ -162,7 +163,7 @@ class Application:
 
         # infseach
         self.s_stt = Label(self.bottom2, text="Stt", font=('arial 12 bold'), fg='black', bg='lightblue',width=5)
-        self.s_stt.place(x=5, y=5)
+        self.s_stt.place(x=0, y=5)
         self.s_name = Label(self.bottom2, text="Họ và tên", font=('arial 12 bold'), fg='black', bg='lightblue', width=20)
         self.s_name.place(x=65, y=5)
         self.s_address = Label(self.bottom2, text="Địa chỉ", font=('arial 12 bold'), fg='black', bg='lightblue',width=25)
@@ -180,47 +181,25 @@ class Application:
 
 
     def add_to_cart(self, *args, **kwargs):
-        self.bt_thoat.destroy()
-        self.bt_delele1.destroy()
-        self.bt_save_file.destroy()
-        self.bt_open_file.destroy()
-        self.bt_add_patient.destroy()
-        self.tenbenhnhan.destroy()
-        self.name_p.destroy()
-        self.adr.destroy()
-        self.adr_p.destroy()
-        self.year_b.destroy()
-        self.job.destroy()
-        self.jobw.destroy()
-        self.sbh.destroy()
-        self.nbh.destroy()
-        self.y_b.destroy()
-        self.st.destroy()
-        self.stom.destroy()
-        self.sex.destroy()
+        self.right.destroy()
+        self.bottom.destroy()
+        self.bottom1.destroy()
+        self.bottom2.destroy()
 
-        self.seachinfo.destroy()
-        self.name_info.destroy()
-        self.name_infos.destroy()
-        self.date_s.destroy()
-        self.from_todate.destroy()
-        self.from_date.destroy()
-        self.date_s2.destroy()
+    def endoscopy(self):
+        self.left.destroy()
+        self.left1.destroy()
 
-        self.s_stt .destroy()
-        self.s_name.destroy()
-        self.s_address.destroy()
-        self.s_sexgt.destroy()
-        self.s_job.destroy()
-        self.s_born.destroy()
-        self.s_sbh.destroy()
+        vc = cv2.VideoCapture(0)
+        rval, frame = vc.read()
 
+        self.right.destroy()
+        self.bottom.destroy()
+        self.bottom1.destroy()
+        self.bottom2.destroy()
 
     def quit(self):
         root.destroy()
-
-
-
 
 
 b = Application(root)
