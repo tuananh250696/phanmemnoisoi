@@ -194,7 +194,7 @@ class Application:
         self.bottom2.destroy()
 
     def endoscopy(self):
-        #root.destroy()
+        root.destroy()
 
         class tehseencode(QDialog):
             def __init__(self):
@@ -211,7 +211,6 @@ class Application:
             @pyqtSlot()
 
 
-
             def onClicked(self):
                 self.TEXT.setText('Kindly Press "Capture Image " to Capture image')
                 cap = cv2.VideoCapture(0)
@@ -226,7 +225,7 @@ class Application:
                         cv2.waitKey()
                         if (self.logic == 2):
                             self.value = self.value + 1
-                            cv2.imwrite('D:/projectpythonmanger/anh\%s.png' % (self.value), frame)
+                            cv2.imwrite('H:/phanmemnoisoi/image\%s.png' % (self.value), frame)
                             self.logic = 1
                             self.TEXT.setText('your Image have been Saved')
                     else:
@@ -253,7 +252,9 @@ class Application:
             def exitpro(self):
                 self.logic = 3
 
-        app = QApplication(sys.argv)
+
+
+        
         window = tehseencode()
         window.show()
         try:
@@ -267,7 +268,7 @@ class Application:
     def quit(self):
         root.destroy()
 
-
+app = QApplication(sys.argv)
 b = Application(root)
 
 root.geometry("1920x1080+0+0")
