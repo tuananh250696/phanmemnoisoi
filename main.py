@@ -232,7 +232,7 @@ class Application:
                 # print(cap.read())
                 while (cap.isOpened()):
                     ret, frame = cap.read()
-                    frame = imutils.resize(frame, width=1000)
+                    frame = imutils.resize(frame, width=1200)
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
                     if ret == True:

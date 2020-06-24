@@ -16,20 +16,20 @@
   <widget class="QTextBrowser" name="TEXT">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>10</y>
-     <width>611</width>
-     <height>81</height>
+     <x>10</x>
+     <y>720</y>
+     <width>311</width>
+     <height>321</height>
     </rect>
    </property>
   </widget>
   <widget class="QLabel" name="imgLabel">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>330</x>
      <y>110</y>
-     <width>1366</width>
-     <height>768</height>
+     <width>1221</width>
+     <height>931</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -47,7 +47,7 @@
     <rect>
      <x>30</x>
      <y>150</y>
-     <width>171</width>
+     <width>271</width>
      <height>81</height>
     </rect>
    </property>
@@ -60,7 +60,7 @@
     <rect>
      <x>30</x>
      <y>260</y>
-     <width>171</width>
+     <width>271</width>
      <height>81</height>
     </rect>
    </property>
@@ -73,12 +73,53 @@
     <rect>
      <x>30</x>
      <y>370</y>
-     <width>171</width>
-     <height>81</height>
+     <width>271</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="text">
     <string>NEXT</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imgLabel_2">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1921</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>ngang1.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imgLabel_3">
+   <property name="geometry">
+    <rect>
+     <x>1560</x>
+     <y>110</y>
+     <width>351</width>
+     <height>931</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
