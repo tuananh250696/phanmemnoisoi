@@ -232,7 +232,7 @@ class Application:
                 # print(cap.read())
                 while (cap.isOpened()):
                     ret, frame = cap.read()
-                    frame = imutils.resize(frame, width=1200)
+                    frame = imutils.resize(frame, width=800,height=600)
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
                     if ret == True:
@@ -244,6 +244,10 @@ class Application:
                             cv2.imwrite('H:/phanmemnoisoi/image\%s.png' % (self.value), frame)
                             self.logic = 1
                             self.TEXT.setText('your Image have been Saved')
+
+                    if  (self.logic == 3):
+                        cap.release()
+                        break
                     else:
                         print('not found')
                 cap.release()
@@ -266,6 +270,7 @@ class Application:
 
             def exitpro(self):
                 self.logic = 3
+                self.loadUi.destroy()
 
         window = tehseencode()
         window.show()
