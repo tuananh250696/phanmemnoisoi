@@ -222,12 +222,16 @@ class Application:
                 self.SHOW.clicked.connect(self.onClicked)
                 self.TEXT.setText("Kindly Press 'Show' to connect with webcam.")
                 self.CAPTURE.clicked.connect(self.CaptureClicked)
-                self.NEXT.clicked.connect(self.exitpro)
+                self.NEXT_3.clicked.connect(self.exitpro)
+                self.CAPTURE_2.clicked.connect(self.f2vrec)
 
             @pyqtSlot()
             def onClicked(self):
                 self.TEXT.setText('Kindly Press "Capture Image " to Capture image')
                 cap = cv2.VideoCapture(0)
+                fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                op = cv2.VideoWriter('Sample1.avi', fourcc, 11.0, (800,600))
+
                 # while (True):
                 # print(cap.read())
                 while (cap.isOpened()):
@@ -244,10 +248,13 @@ class Application:
                             cv2.imwrite('H:/phanmemnoisoi/image\%s.png' % (self.value), frame)
                             self.logic = 1
                             self.TEXT.setText('your Image have been Saved')
+                        if  (self.logic == 3):
+                            self.displayImage(frame, 1)
+                            op.write(frame)
 
-                    if  (self.logic == 3):
-                        cap.release()
-                        break
+                        if  (self.logic == 4):
+                            cap.release()
+                            break
                     else:
                         print('not found')
                 cap.release()
@@ -269,8 +276,13 @@ class Application:
                 self.imgLabel.setAlignment(QtCore.Qt.AlignLeft| QtCore.Qt.AlignLeft)
 
             def exitpro(self):
-                self.logic = 3
+                self.logic = 4
                 self.loadUi.destroy()
+
+            def f2vrec(self):
+                self.logic = 3
+
+
 
         window = tehseencode()
         window.show()
