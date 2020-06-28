@@ -77,6 +77,8 @@ class Application:
         self.bt_exit1 = Button(self.left, text="Thoát", width=18, height=2, font=('arial 18 bold'), bg='orange',
                                command=self.quit)
         self.bt_exit1.place(x=8, y=495)
+        keyboard.add_hotkey('s', self.show)
+        keyboard.add_hotkey('h', self.hide)
 
     def ajax(self, *args, **kwargs):
         self.right = Frame(root, width=2100, height=53, bg='white')
@@ -200,8 +202,8 @@ class Application:
         self.s_sbh = Label(self.bottom2, text="Số bảo hiểm", font=('arial 12 bold'), fg='black', bg='lightblue',
                            width=10)
         self.s_sbh.place(x=875, y=5)
-        keyboard.add_hotkey('ctrl+alt+s', self.show)
-        keyboard.add_hotkey('ctrl+alt+h', self.hide)
+        keyboard.add_hotkey('s', self.show)
+        keyboard.add_hotkey('h', self.hide)
 
 
     def add_to_cart(self, *args, **kwargs):
@@ -219,7 +221,9 @@ class Application:
         root.withdraw()
 
     def endoscopy(self):
-        root.withdraw()
+        #root.withdraw()
+        keyboard.add_hotkey('s', self.show)
+        keyboard.add_hotkey('h', self.hide)
         class tehseencode(QDialog):
             def __init__(self):
                 super(tehseencode, self).__init__()
@@ -247,6 +251,7 @@ class Application:
                     ret, frame = cap.read()
                     frame = imutils.resize(frame, width=800,height=600)
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
 
                     if ret == True:
                         print('here')
