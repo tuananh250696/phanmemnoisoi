@@ -9,6 +9,7 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 import cv2
 import sys
+import keyboard
 import numpy as np
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSlot
@@ -171,17 +172,14 @@ class Application:
         var2 = IntVar()
         chkbtn4 = Checkbutton(self.bottom1, text="Nữ", variable=var2, font=('arial 14 bold'), fg='black',
                               bg='lightblue').place(x=340, y=10)
-
         self.date_s = Label(self.bottom1, text="Từ:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.date_s.place(x=420, y=15)
         self.from_date = Entry(self.bottom1, font=('arial 18 bold'), width=8)
         self.from_date.place(x=455, y=10)
-
         self.date_s2 = Label(self.bottom1, text="Đến:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.date_s2.place(x=575, y=15)
         self.from_todate = Entry(self.bottom1, font=('arial 18 bold'), width=8)
         self.from_todate.place(x=620, y=10)
-
         # infseach
         self.s_stt = Label(self.bottom2, text="Stt", font=('arial 12 bold'), fg='black', bg='lightblue', width=5)
         self.s_stt.place(x=0, y=5)
@@ -202,6 +200,9 @@ class Application:
         self.s_sbh = Label(self.bottom2, text="Số bảo hiểm", font=('arial 12 bold'), fg='black', bg='lightblue',
                            width=10)
         self.s_sbh.place(x=875, y=5)
+        keyboard.add_hotkey('ctrl+alt+s', self.show)
+        keyboard.add_hotkey('ctrl+alt+h', self.hide)
+
 
     def add_to_cart(self, *args, **kwargs):
         self.right.destroy()
@@ -209,9 +210,16 @@ class Application:
         self.bottom1.destroy()
         self.bottom2.destroy()
 
-    def endoscopy(self):
-        root.destroy()
+    def show(self):
+        root.update()
+        root.deiconify()
 
+    def hide(self):
+        root.update()
+        root.withdraw()
+
+    def endoscopy(self):
+        root.withdraw()
         class tehseencode(QDialog):
             def __init__(self):
                 super(tehseencode, self).__init__()
@@ -224,6 +232,7 @@ class Application:
                 self.CAPTURE.clicked.connect(self.CaptureClicked)
                 self.NEXT_3.clicked.connect(self.exitpro)
                 self.CAPTURE_2.clicked.connect(self.f2vrec)
+                self.NEXT_2.clicked.connect(self.w1)
 
             @pyqtSlot()
             def onClicked(self):
@@ -249,12 +258,17 @@ class Application:
                             self.logic = 1
                             self.TEXT.setText('your Image have been Saved')
                         if  (self.logic == 3):
-                            self.displayImage(frame, 1)
+                            #self.displayImage(frame, 1)
                             op.write(frame)
 
                         if  (self.logic == 4):
                             cap.release()
                             break
+
+                        if (self.logic == 5):
+                            self.loadUi.withdraw()
+
+
                     else:
                         print('not found')
                 cap.release()
@@ -283,6 +297,13 @@ class Application:
                 self.logic = 3
 
 
+            def w1(self):
+                self.logic = 5
+
+                #self.loadUi.withdraw()
+               #root.show()
+
+
 
         window = tehseencode()
         window.show()
@@ -293,6 +314,7 @@ class Application:
 
     def quit(self):
         root.destroy()
+
 
 
 app = QApplication(sys.argv)
