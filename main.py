@@ -220,15 +220,14 @@ class Application:
         root.update()
         root.withdraw()
 
+    def quit(self):
+        root.destroy()
+
     def endoscopy(self):
-        #root.withdraw()
-        keyboard.add_hotkey('s', self.show)
-        keyboard.add_hotkey('h', self.hide)
         class tehseencode(QDialog):
             def __init__(self):
                 super(tehseencode, self).__init__()
                 loadUi("untitled2.ui", self)
-
                 self.logic = 0
                 self.value = 1
                 self.SHOW.clicked.connect(self.onClicked)
@@ -270,10 +269,6 @@ class Application:
                             cap.release()
                             break
 
-                        if (self.logic == 5):
-                            self.loadUi.withdraw()
-
-
                     else:
                         print('not found')
                 cap.release()
@@ -296,19 +291,14 @@ class Application:
 
             def exitpro(self):
                 self.logic = 4
-                self.loadUi.destroy()
+
 
             def f2vrec(self):
                 self.logic = 3
-
-
             def w1(self):
-                self.logic = 5
 
-                #self.loadUi.withdraw()
-               #root.show()
-
-
+                window.close()
+                self.logic = 4
 
         window = tehseencode()
         window.show()
@@ -317,8 +307,7 @@ class Application:
         except:
             print('excitng')
 
-    def quit(self):
-        root.destroy()
+
 
 
 
