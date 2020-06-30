@@ -1,5 +1,6 @@
 from tkinter import *
 import sqlite3
+import tkinter as tk
 import tkinter.messagebox
 import datetime
 import math
@@ -63,7 +64,7 @@ class Application:
         self.bt_st_form.place(x=8, y=135)
 
         self.bt_patient = Button(self.left, text="Biểu mẫu in", width=18, height=2, font=('arial 18 bold'), bg='orange',
-                                 command=self.ajax)
+                                 command=self.createNewWindow)
         self.bt_patient.place(x=8, y=225)
 
         self.bt_endoscop = Button(self.left, text="Danh mục in", width=18, height=2, font=('arial 18 bold'),
@@ -77,8 +78,7 @@ class Application:
         self.bt_exit1 = Button(self.left, text="Thoát", width=18, height=2, font=('arial 18 bold'), bg='orange',
                                command=self.quit)
         self.bt_exit1.place(x=8, y=495)
-        keyboard.add_hotkey('s', self.show)
-        keyboard.add_hotkey('h', self.hide)
+
 
     def ajax(self, *args, **kwargs):
         self.right = Frame(root, width=2100, height=53, bg='white')
@@ -202,8 +202,8 @@ class Application:
         self.s_sbh = Label(self.bottom2, text="Số bảo hiểm", font=('arial 12 bold'), fg='black', bg='lightblue',
                            width=10)
         self.s_sbh.place(x=875, y=5)
-        keyboard.add_hotkey('s', self.show)
-        keyboard.add_hotkey('h', self.hide)
+        #keyboard.add_hotkey('s', self.show)
+        #keyboard.add_hotkey('h', self.hide)
 
 
     def add_to_cart(self, *args, **kwargs):
@@ -211,6 +211,46 @@ class Application:
         self.bottom.destroy()
         self.bottom1.destroy()
         self.bottom2.destroy()
+
+    def createNewWindow(self, *args, **kwarg):
+        newWindow = Toplevel(root)
+        newWindow.title("Set form print")
+        newWindow.geometry("600x350")
+
+        self.rightw2 = Frame(newWindow, width=600, height=450, bg='lightblue')
+        self.rightw2.pack(side=TOP)
+
+        self.adr2 = Label(self.rightw2, text="Phòng khám:", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.adr2.place(x=10, y=10)
+        self.adr2_p = Entry(self.rightw2, font=('arial 18 bold'), width=32)
+        self.adr2_p.place(x=150, y=10)
+
+        self.doctor = Label(self.rightw2, text=" Bác sĩ :", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.doctor.place(x=10, y=85)
+
+        self.doctor_p = Entry(self.rightw2, font=('arial 18 bold'), width=32)
+        self.doctor_p.place(x=150, y=75)
+
+        self.n2 = Label(self.rightw2, text="Địa chỉ:", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.n2.place(x=10, y=150)
+
+        self.n2_p = Entry(self.rightw2, font=('arial 18 bold'), width=32)
+        self.n2_p.place(x=150, y=150)
+
+        self.add_dt = Button(self.rightw2, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                                )
+        self.add_dt.place(x=10, y=260)
+
+        self.add_dl = Button(self.rightw2, text="Sửa", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                                )
+        self.add_dl.place(x=200, y=260)
+
+        self.add_dltd = Button(self.rightw2, text="Xóa", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                                )
+        self.add_dltd.place(x=390, y=260)
+
+
+
 
     def show(self):
         root.update()
@@ -309,10 +349,8 @@ class Application:
 
 
 
-
-
 app = QApplication(sys.argv)
 b = Application(root)
 
-root.geometry("1920x1080+0+0")
+root.geometry("1360x786+0+0")
 root.mainloop()
