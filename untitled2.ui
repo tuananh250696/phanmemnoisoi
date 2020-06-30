@@ -65,7 +65,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>capture</string>
+    <string>Capture</string>
    </property>
   </widget>
   <widget class="QPushButton" name="NEXT">
@@ -197,7 +197,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>NEXT</string>
+    <string>IN PHIẾU KHÁM</string>
    </property>
   </widget>
   <widget class="QPushButton" name="NEXT_7">
