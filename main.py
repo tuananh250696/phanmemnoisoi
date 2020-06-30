@@ -64,15 +64,15 @@ class Application:
         self.bt_st_form.place(x=8, y=135)
 
         self.bt_patient = Button(self.left, text="Biểu mẫu in", width=18, height=2, font=('arial 18 bold'), bg='orange',
-                                 command=self.createNewWindow)
+                                 command=self.add_to_bn)
         self.bt_patient.place(x=8, y=225)
 
-        self.bt_endoscop = Button(self.left, text="Danh mục in", width=18, height=2, font=('arial 18 bold'),
-                                  bg='orange', command=self.ajax)
+        self.bt_endoscop = Button(self.left, text="Danh mục khám", width=18, height=2, font=('arial 18 bold'),
+                                  bg='orange', command=self.createNewWindow)
         self.bt_endoscop.place(x=8, y=315)
 
         self.bt_diagnose = Button(self.left, text="Danh mục chẩn đoán", width=18, height=2, font=('arial 18 bold'),
-                                  bg='orange', command=self.ajax)
+                                  bg='orange', command=self.createNewWindowadd1)
         self.bt_diagnose.place(x=8, y=405)
 
         self.bt_exit1 = Button(self.left, text="Thoát", width=18, height=2, font=('arial 18 bold'), bg='orange',
@@ -102,7 +102,7 @@ class Application:
         self.bt_open_file.place(x=160, y=0)
         #
         self.bt_save_file = Button(self.right, text="lưu hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
-                                   command=self.ajax)
+                                   command=self.endoscopy)
         self.bt_save_file.place(x=320, y=0)
         #
         self.bt_delele1 = Button(self.right, text="Xóa", width=15, height=2, font=('arial 12 bold'), bg='white',
@@ -212,44 +212,97 @@ class Application:
         self.bottom1.destroy()
         self.bottom2.destroy()
 
-    def createNewWindow(self, *args, **kwarg):
-        newWindow = Toplevel(root)
-        newWindow.title("Set form print")
-        newWindow.geometry("600x350")
+    def add_to_bn(self, *args, **kwargs):
+        addWindow = Toplevel(root)
+        addWindow.title("Set form print")
+        addWindow.geometry("600x350")
+        self.rightadd2 = Frame(addWindow, width=600, height=450, bg='lightblue')
+        self.rightadd2.pack(side=TOP)
 
-        self.rightw2 = Frame(newWindow, width=600, height=450, bg='lightblue')
-        self.rightw2.pack(side=TOP)
-
-        self.adr2 = Label(self.rightw2, text="Phòng khám:", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.adr2 = Label(self.rightadd2, text="Phòng khám:", font=('arial 16 bold'), fg='black', bg='lightblue')
         self.adr2.place(x=10, y=10)
-        self.adr2_p = Entry(self.rightw2, font=('arial 18 bold'), width=32)
+        self.adr2_p = Entry(self.rightadd2, font=('arial 18 bold'), width=32)
         self.adr2_p.place(x=150, y=10)
 
-        self.doctor = Label(self.rightw2, text=" Bác sĩ :", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.doctor = Label(self.rightadd2, text=" Bác sĩ :", font=('arial 16 bold'), fg='black', bg='lightblue')
         self.doctor.place(x=10, y=85)
 
-        self.doctor_p = Entry(self.rightw2, font=('arial 18 bold'), width=32)
+        self.doctor_p = Entry(self.rightadd2, font=('arial 18 bold'), width=32)
         self.doctor_p.place(x=150, y=75)
 
-        self.n2 = Label(self.rightw2, text="Địa chỉ:", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.n2 = Label(self.rightadd2, text="Địa chỉ:", font=('arial 16 bold'), fg='black', bg='lightblue')
         self.n2.place(x=10, y=150)
 
-        self.n2_p = Entry(self.rightw2, font=('arial 18 bold'), width=32)
+        self.n2_p = Entry(self.rightadd2, font=('arial 18 bold'), width=32)
         self.n2_p.place(x=150, y=150)
 
-        self.add_dt = Button(self.rightw2, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange',
-                                )
+        self.add_dt = Button(self.rightadd2, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                             )
         self.add_dt.place(x=10, y=260)
 
-        self.add_dl = Button(self.rightw2, text="Sửa", width=12, height=1, font=('arial 18 bold'), bg='orange',
-                                )
+        self.add_dl = Button(self.rightadd2, text="Sửa", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                             )
         self.add_dl.place(x=200, y=260)
 
-        self.add_dltd = Button(self.rightw2, text="Xóa", width=12, height=1, font=('arial 18 bold'), bg='orange',
-                                )
+        self.add_dltd = Button(self.rightadd2, text="Xóa", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                               )
         self.add_dltd.place(x=390, y=260)
 
 
+    def createNewWindow(self, *args, **kwarg):
+        newWindowaddf = Toplevel(root)
+        newWindowaddf.title("add infomation")
+        newWindowaddf.geometry("600x350")
+
+        self.rightw2 = Frame(newWindowaddf, width=600, height=330, bg='lightblue')
+        self.rightw2.pack(side=TOP)
+        self.rightw3 = Frame(newWindowaddf, width=600, height=120, bg='lightblue')
+        self.rightw3.pack(side=BOTTOM)
+
+        listbox = Listbox(self.rightw2, height=12,width=40,bg="lightblue",activestyle='dotbox',font="Helvetica",fg="yellow")
+        listbox.pack()
+
+        self.add_if2 = Entry(self.rightw3, font=('arial 18 bold'), width=25)
+        self.add_if2.place(x=140, y=10)
+
+        self.add_ifmt = Button(self.rightw3, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange')
+        self.add_ifmt.place(x=5, y=55)
+
+        self.add_dltifmt = Button(self.rightw3, text="Lưu", width=12, height=1, font=('arial 18 bold'),
+                                  bg='orange')
+        self.add_dltifmt.place(x=200, y=55)
+
+        self.add_dltd = Button(self.rightw3, text="Xóa", width=12, height=1, font=('arial 18 bold'),
+                               bg='orange')
+        self.add_dltd.place(x=395, y=55)
+
+
+    def createNewWindowadd1(self, *args, **kwarg):
+        newWindowaddf2 = Toplevel(root)
+        newWindowaddf2.title("add infomation")
+        newWindowaddf2.geometry("600x350")
+
+        self.rightw2 = Frame(newWindowaddf2, width=600, height=330, bg='lightblue')
+        self.rightw2.pack(side=TOP)
+        self.rightw3 = Frame(newWindowaddf2, width=600, height=120, bg='lightblue')
+        self.rightw3.pack(side=BOTTOM)
+
+        listboxadd1 = Listbox(self.rightw2, height=12,width=40,bg="lightblue",activestyle='dotbox',font="Helvetica",fg="yellow")
+        listboxadd1.pack()
+
+        self.add_if3 = Entry(self.rightw3, font=('arial 18 bold'), width=25)
+        self.add_if3.place(x=140, y=10)
+
+        self.add_ifmt3 = Button(self.rightw3, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange')
+        self.add_ifmt3.place(x=5, y=55)
+
+        self.add_dltifmt3 = Button(self.rightw3, text="Lưu", width=12, height=1, font=('arial 18 bold'),
+                                  bg='orange')
+        self.add_dltifmt3.place(x=200, y=55)
+
+        self.add_dltd3 = Button(self.rightw3, text="Xóa", width=12, height=1, font=('arial 18 bold'),
+                               bg='orange')
+        self.add_dltd3.place(x=395, y=55)
 
 
     def show(self):
