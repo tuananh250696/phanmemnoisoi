@@ -1,0 +1,247 @@
+from tkinter import *
+import sqlite3
+import tkinter as tk
+import tkinter.messagebox
+import datetime
+import math
+import os
+import random
+from tkinter import ttk
+from PIL import ImageTk, Image
+import cv2
+import sys
+import keyboard
+import numpy as np
+from PyQt5 import QtCore
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtWidgets import QDialog, QApplication
+from PyQt5.uic import loadUi
+import imutils
+
+date = datetime.datetime.now().date()
+root = Tk()
+root.title("COMPANY BOSSCCOM")
+root.geometry("1360x786+0+0")
+root.resizable(0, 0)
+image = PhotoImage(file="ngang1.png")
+img_resize = image.subsample(1, 1)
+
+def Database():
+    conn = sqlite3.connect("db_member.db")
+    cursor = conn.cursor()
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS `member` (mem_id INTEGER NOT NULL PRIMARY KEY  AUTOINCREMENT, firstname TEXT, lastname TEXT, address TEXT, age TEXT)")
+    cursor.execute("SELECT * FROM `member`")
+    if cursor.fetchone() is None:
+        cursor.execute(
+            "INSERT INTO `member` (firstname, lastname, address, age) VALUES('John', 'Smith', 'Pallet Town', '20')")
+        cursor.execute(
+            "INSERT INTO `member` (firstname, lastname, address, age) VALUES('Claire', 'Temple', 'Racoon City', '19')")
+        conn.commit()
+
+    cursor.execute("SELECT * FROM `member` ORDER BY `lastname` ASC")
+    fetch = cursor.fetchall()
+    for data in fetch:
+        tree.insert('', 'end', values=(data))
+    cursor.close()
+    conn.close()
+
+
+def Search():
+    if SEARCH.get() != "":
+        tree.delete(*tree.get_children())
+        conn = sqlite3.connect("db_member.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM `member` WHERE `firstname` LIKE ? OR `lastname` LIKE ?",
+                       ('%' + str(SEARCH.get()) + '%', '%' + str(SEARCH.get()) + '%'))
+        fetch = cursor.fetchall()
+        for data in fetch:
+            tree.insert('', 'end', values=(data))
+        cursor.close()
+        conn.close()
+
+
+
+def ajax():
+        # button control system
+    bt_add_patient = Button(right, text="Thêm bệnh nhân", width=15, height=2, font=('arial 12 bold'),
+                                     bg='white')
+    bt_add_patient.place(x=0, y=0)
+
+    bt_open_file = Button(right, text="Mở hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
+                                   )
+    bt_open_file.place(x=160, y=0)
+        #
+    bt_save_file = Button(right, text="lưu hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white')
+    bt_save_file.place(x=320, y=0)
+        #
+    bt_delele1 = Button(right, text="Xóa", width=15, height=2, font=('arial 12 bold'), bg='white')
+    bt_delele1.place(x=480, y=0)
+        #
+    bt_thoat = Button(right, text="Đóng", width=15, height=2, font=('arial 12 bold'), bg='white')
+    bt_thoat.place(x=640, y=0)
+
+    tenbenhnhan = Label(bottom, text="Tên bệnh nhân:", font=('arial 12 bold'), fg='black', bg='lightblue')
+    tenbenhnhan.place(x=15, y=5)
+
+
+    name_p = Entry(bottom, font=('arial 24 bold'), width=20)
+    name_p.place(x=5, y=30)
+    name_p.focus()
+
+    adr = Label(bottom, text="Địa chỉ:", font=('arial 12 bold'), fg='black', bg='lightblue')
+    adr.place(x=15, y=75)
+
+    adr_p = Entry(bottom, font=('arial 24 bold'), width=20)
+    adr_p.place(x=5, y=100)
+
+
+    year_b = Label(bottom, text="Năm sinh:", font=('arial 12 bold'), fg='black', bg='lightblue')
+    year_b.place(x=15, y=150)
+
+    y_b = Entry(bottom, font=('arial 24 bold'), width=20)
+    y_b.place(x=5, y=175)
+
+
+    job = Label(bottom, text="Nghề nghiệp:", font=('arial 12 bold'), fg='black', bg='lightblue')
+    job.place(x=425, y=5)
+    jobw = Entry(bottom, font=('arial 24 bold'), width=20)
+    jobw.place(x=410, y=30)
+
+    st = Label(bottom, text="Triệu chứng:", font=('arial 12 bold'), fg='black', bg='lightblue')
+    st.place(x=420, y=75)
+
+    stom = Entry(bottom, font=('arial 24 bold'), width=20)
+    stom.place(x=410, y=100)
+
+    sbh = Label(bottom, text="Số bảo hiểm:", font=('arial 12 bold'), fg='black', bg='lightblue')
+    sbh.place(x=420, y=150)
+
+    nbh = Entry(bottom, font=('arial 24 bold'), width=20)
+    nbh.place(x=410, y=175)
+
+    sex = Label(bottom, text="Giới tính:", font=('arial 12 bold'),
+                         fg='black', bg='lightblue')
+    sex.place(x=800, y=5)
+        #
+    var3 = IntVar()
+    var4 = IntVar()
+    chkbtn1 = Checkbutton(bottom, text='Nam', variable=var3, font=('arial 18 bold'), fg='black',
+                                   bg='lightblue').place(x=810, y=25)
+    chkbtn2 = Checkbutton(bottom, text='Nữ', variable=var4, font=('arial 18 bold'), fg='black',
+                                   bg='lightblue').place(x=900, y=25)
+
+    seachinfo = Button(bottom1, text="Tìm kiếm", width=15, height=1, font=('arial 18 bold'), bg='orange')
+    seachinfo.place(x=800, y=5)
+
+    name_info = Label(bottom1, text="Tên:", font=('arial 12 bold'), fg='black', bg='lightblue')
+    name_info.place(x=5, y=15)
+
+    name_infos = Entry(bottom1, width=15, font=('arial 18 bold'), bg='white')
+    name_infos.place(x=55, y=10)
+        #self.name_infos.focus()
+
+
+
+
+
+
+
+
+SEARCH = StringVar()
+
+
+left1 = Frame(root, width=1360, height=96, bg='white')
+left1.pack(side=TOP)
+Label(left1, image=img_resize, bg="white", relief=SUNKEN).pack(pady=5)
+
+left = Frame(root, width=320, height=786, bg='white')
+left.pack(side=LEFT)
+right = Frame(root, width=1100, height=53, bg='white')
+right.pack(side=TOP)
+bottom = Frame(root, width=1100, height=220, bg='lightblue')
+bottom.pack(side=TOP)
+bottom1 = Frame(root, width=1100, height=60, bg='yellow')
+bottom1.pack(side=TOP)
+bottom2 = Frame(root, width=1100, height=600, bg='green')
+bottom2.pack(side=TOP)
+# =====================================FRAME================================================
+# Top = Frame(root, width=500, bd=1, relief=SOLID)
+# Top.pack(side=TOP)
+MidFrame = Frame(root, width=500)
+MidFrame.pack(side=TOP)
+LeftForm = Frame(MidFrame, width=100)
+LeftForm.pack(side=LEFT)
+RightForm = Frame(MidFrame, width=500)
+RightForm.pack(side=RIGHT)
+    # =====================================LABEL WIDGET=========================================
+lbl_title = Label(bottom2, width=500, font=('arial', 18), text="Python - Search Query In SQLite")
+lbl_title.pack(side=TOP, fill=X)
+lbl_search = Label(LeftForm, font=('arial', 15), text="Search here...")
+lbl_search.pack(side=TOP)
+
+    # =====================================ENTRY WIDGET=========================================
+search = Entry(LeftForm, textvariable=SEARCH)
+search.pack(side=TOP, pady=10)
+
+    # =====================================BUTTON WIDGET========================================
+btn_search = Button(LeftForm, text="Search", bg="#006dcc", command=Search)
+btn_search.pack(side=LEFT)
+btn_reset = Button(LeftForm, text="Reset")
+btn_reset.pack(side=LEFT)
+    # =====================================Table WIDGET=========================================
+scrollbarx = Scrollbar(RightForm, orient=HORIZONTAL)
+scrollbary = Scrollbar(RightForm, orient=VERTICAL)
+tree = ttk.Treeview(RightForm, columns=("MemberID", "Firstname", "Lastname", "Address", "Age"),
+                        selectmode="extended",
+                        height=400, yscrollcommand=scrollbary.set, xscrollcommand=scrollbarx.set)
+scrollbary.config(command=tree.yview)
+scrollbary.pack(side=RIGHT, fill=Y)
+scrollbarx.config(command=tree.xview)
+scrollbarx.pack(side=BOTTOM, fill=X)
+tree.heading('MemberID', text="MemberID", anchor=W)
+tree.heading('Firstname', text="Firstname", anchor=W)
+tree.heading('Lastname', text="Lastname", anchor=W)
+tree.heading('Address', text="Address", anchor=W)
+tree.heading('Age', text="Age", anchor=W)
+tree.column('#0', stretch=NO, minwidth=0, width=0)
+tree.column('#1', stretch=NO, minwidth=0, width=0)
+tree.column('#2', stretch=NO, minwidth=0, width=80)
+tree.column('#3', stretch=NO, minwidth=0, width=120)
+tree.column('#4', stretch=NO, minwidth=0, width=170)
+tree.column('#5', stretch=NO, minwidth=0, width=80)
+tree.pack()
+
+    # components
+date_l = Label(left, text="Today's Date: " + str(date), font=('arial 16 bold'), bg='lightblue',
+                        fg='white')
+date_l.place(x=20, y=0)
+
+    # button
+bt_st_catalog = Button(left, text="Hồ sơ bệnh nhân", width=18, height=2, font=('arial 18 bold'),
+                                bg='orange',command=ajax)
+bt_st_catalog.place(x=8, y=45)
+
+bt_st_form = Button(left, text="Nội soi", width=18, height=2, font=('arial 18 bold'), bg='orange')
+bt_st_form.place(x=8, y=135)
+
+bt_patient = Button(left, text="Biểu mẫu in", width=18, height=2, font=('arial 18 bold'), bg='orange')
+bt_patient.place(x=8, y=225)
+
+bt_endoscop = Button(left, text="Danh mục khám", width=18, height=2, font=('arial 18 bold'),
+                              bg='orange')
+bt_endoscop.place(x=8, y=315)
+
+bt_diagnose = Button(left, text="Danh mục chẩn đoán", width=18, height=2, font=('arial 18 bold'),
+                              bg='orange')
+bt_diagnose.place(x=8, y=405)
+
+bt_exit1 = Button(left, text="Thoát", width=18, height=2, font=('arial 18 bold'), bg='orange')
+bt_exit1.place(x=8, y=495)
+
+
+# =====================================INITIALIZATION=======================================
+if __name__ == '__main__':
+    Database()
+    root.mainloop()
