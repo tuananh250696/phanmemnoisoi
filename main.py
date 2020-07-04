@@ -18,6 +18,8 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
 import imutils
+
+
 conn = sqlite3.connect("Database\store.db")
 c = conn.cursor()
 
@@ -37,12 +39,11 @@ labels_list = []
 image = PhotoImage(file="ngang1.png")
 img_resize = image.subsample(1, 1)
 
-
 class Application:
     def __init__(self, master, *args, **kwargs):
         self.master = master
         # frame
-        self.left1 = Frame(master, width=1920, height=96, bg='white')
+        self.left1 = Frame(master, width=1360, height=96, bg='white')
         self.left1.pack(side=TOP)
         Label(self.left1, image=img_resize, bg="white", relief=SUNKEN).pack(pady=5)
 
@@ -80,16 +81,18 @@ class Application:
         self.bt_exit1.place(x=8, y=495)
 
 
+
     def ajax(self, *args, **kwargs):
-        self.right = Frame(root, width=2100, height=53, bg='white')
+        self.right = Frame(root, width=1100, height=53, bg='white')
         self.right.pack(side=TOP)
 
-        self.bottom = Frame(root, width=2100, height=220, bg='lightblue')
+        self.bottom = Frame(root, width=1100, height=220, bg='lightblue')
         self.bottom.pack(side=TOP)
 
-        self.bottom1 = Frame(root, width=2100, height=60, bg='yellow')
+        self.bottom1 = Frame(root, width=1100, height=60, bg='yellow')
         self.bottom1.pack(side=TOP)
-        self.bottom2 = Frame(root, width=2100, height=1100, bg='white')
+
+        self.bottom2 = Frame(root, width=1100, height=600, bg='green')
         self.bottom2.pack(side=TOP)
 
         # button control system
@@ -98,7 +101,7 @@ class Application:
         self.bt_add_patient.place(x=0, y=0)
 
         self.bt_open_file = Button(self.right, text="Mở hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
-                                   command=self.ajax)
+                                   command= self.get_itemsdatabase)
         self.bt_open_file.place(x=160, y=0)
         #
         self.bt_save_file = Button(self.right, text="lưu hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
@@ -106,7 +109,7 @@ class Application:
         self.bt_save_file.place(x=320, y=0)
         #
         self.bt_delele1 = Button(self.right, text="Xóa", width=15, height=2, font=('arial 12 bold'), bg='white',
-                                 command=self.ajax)
+                                 command=self.delete_text)
         self.bt_delele1.place(x=480, y=0)
         #
         self.bt_thoat = Button(self.right, text="Đóng", width=15, height=2, font=('arial 12 bold'), bg='white',
@@ -116,8 +119,10 @@ class Application:
         self.tenbenhnhan = Label(self.bottom, text="Tên bệnh nhân:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.tenbenhnhan.place(x=15, y=5)
 
+
         self.name_p = Entry(self.bottom, font=('arial 24 bold'), width=20)
         self.name_p.place(x=5, y=30)
+        self.name_p.focus()
 
         self.adr = Label(self.bottom, text="Địa chỉ:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.adr.place(x=15, y=75)
@@ -125,11 +130,13 @@ class Application:
         self.adr_p = Entry(self.bottom, font=('arial 24 bold'), width=20)
         self.adr_p.place(x=5, y=100)
 
+
         self.year_b = Label(self.bottom, text="Năm sinh:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.year_b.place(x=15, y=150)
 
         self.y_b = Entry(self.bottom, font=('arial 24 bold'), width=20)
         self.y_b.place(x=5, y=175)
+
 
         self.job = Label(self.bottom, text="Nghề nghiệp:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.job.place(x=425, y=5)
@@ -148,7 +155,8 @@ class Application:
         self.nbh = Entry(self.bottom, font=('arial 24 bold'), width=20)
         self.nbh.place(x=410, y=175)
 
-        self.sex = Label(self.bottom, text="Giới tính:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.sex = Label(self.bottom, text="Giới tính:", font=('arial 12 bold'),
+                         fg='black', bg='lightblue')
         self.sex.place(x=800, y=5)
         #
         var3 = IntVar()
@@ -159,14 +167,15 @@ class Application:
                                    bg='lightblue').place(x=900, y=25)
 
         self.seachinfo = Button(self.bottom1, text="Tìm kiếm", width=15, height=1, font=('arial 18 bold'), bg='orange',
-                                command=self.ajax)
+                                command=self.ajax2)
         self.seachinfo.place(x=800, y=5)
 
         self.name_info = Label(self.bottom1, text="Tên:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.name_info.place(x=5, y=15)
 
-        self.name_infos = Entry(self.bottom1, font=('arial 18 bold'), width=15)
+        self.name_infos = Entry(self.bottom1, width=15, font=('arial 18 bold'), bg='white')
         self.name_infos.place(x=55, y=10)
+        #self.name_infos.focus()
 
         var1 = IntVar()
         self.chkbtn3 = Checkbutton(self.bottom1, text="Nam", variable=var1, font=('arial 14 bold'), fg='black',
@@ -202,8 +211,12 @@ class Application:
         self.s_sbh = Label(self.bottom2, text="Số bảo hiểm", font=('arial 12 bold'), fg='black', bg='lightblue',
                            width=10)
         self.s_sbh.place(x=875, y=5)
-        #keyboard.add_hotkey('s', self.show)
-        #keyboard.add_hotkey('h', self.hide)
+
+        self.productname = Label(self.bottom2, text="", font=('arial 10 bold'), bg='white', fg='steelblue')
+        self.productname.place(x=0, y=30)
+        self.pprice = Label(self.bottom2, text="", font=('arial 10 bold'), bg='white', fg='steelblue')
+        self.pprice.place(x=0, y=60)
+
 
 
     def add_to_cart(self, *args, **kwargs):
@@ -211,6 +224,50 @@ class Application:
         self.bottom.destroy()
         self.bottom1.destroy()
         self.bottom2.destroy()
+
+    def delete_text(self, *args, **kwargs):
+        num = id + 1
+        self.name_p.delete(0, END)
+        self.adr_p.delete(0, END)
+        self.y_b.delete(0, END)
+        self.jobw.delete(0, END)
+        self.stom.delete(0, END)
+        self.nbh.delete(0, END)
+
+    def ajax2(self, *args, **kwargs):
+        self.get_id = self.name_infos.get()
+        # get the products info with that id and fill it in the labels above
+        query = "SELECT * FROM inventory WHERE name=?"
+        result = c.execute(query, (self.get_id,))
+        for self.r in result:
+            self.get_id = self.r[0]
+            self.get_name = self.r[1]
+            self.get_price = self.r[4]
+            self.get_stock = self.r[2]
+        self.productname.configure(text="Product's Name: " + str(self.get_name))
+        self.pprice.configure(text="Price: Rs. " + str(self.get_price))
+
+
+
+    def get_itemsdatabase(self, *args, **kwargs):
+
+        self.adname = self.name_p.get()
+        self.adjob = self.jobw.get()
+        self.adddr = self.adr_p.get()
+        self.aborn = self.y_b.get()
+        self.asymptom = self.stom.get()
+        self.ainsurance = self.nbh.get()
+
+        if self.adname== '' or self.adddr== '' or self.asymptom == '' or self.adjob == '':
+            tkinter.messagebox.showinfo("Error", "Please Fill all the entries.")
+        else:
+            sql = "INSERT INTO inventory (name, stock, cp, sp, totalcp, totalsp, assumed_profit, vendor, vendor_phoneno ) VALUES(?,?,?,?,?,?,?,?,?)"
+            c.execute(sql, (self.adname, self.adjob, self.adddr, self.aborn, self.asymptom, self.ainsurance, self.ainsurance,self.ainsurance,self.ainsurance))
+            conn.commit()
+            # textbox insert
+            tkinter.messagebox.showinfo("Success", "Successfully added to the database")
+
+
 
     def add_to_bn(self, *args, **kwargs):
         addWindow = Toplevel(root)
