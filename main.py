@@ -19,13 +19,10 @@ from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
 import imutils
 
-
-conn = sqlite3.connect("Database\store.db")
-c = conn.cursor()
-
+# conn = sqlite3.connect("Database\store.db")
+# c = conn.cursor()
 # date
 date = datetime.datetime.now().date()
-
 # temporary lists like sessions
 products_list = []
 product_price = []
@@ -49,6 +46,18 @@ class Application:
 
         self.left = Frame(master, width=320, height=1300, bg='white')
         self.left.pack(side=LEFT)
+
+        self.right = Frame(root, width=1100, height=53, bg='white')
+        self.right.pack(side=TOP)
+
+        self.bottom = Frame(root, width=1100, height=220, bg='lightblue')
+        self.bottom.pack(side=TOP)
+
+        self.bottom1 = Frame(root, width=1100, height=60, bg='yellow')
+        self.bottom1.pack(side=TOP)
+
+        self.bottom2 = Frame(root, width=1100, height=600, bg='lightblue')
+        self.bottom2.pack(side=TOP)
 
         # components
         self.date_l = Label(self.left, text="Today's Date: " + str(date), font=('arial 16 bold'), bg='lightblue',
@@ -80,28 +89,86 @@ class Application:
                                command=self.quit)
         self.bt_exit1.place(x=8, y=495)
 
+        self.seachinfo = Button(self.bottom1, text="Tìm kiếm", width=15, height=1, font=('arial 18 bold'), bg='orange',
+                                command=self.Search)
+        self.seachinfo.place(x=800, y=5)
+
+        self.name_info = Label(self.bottom1, text="Tên:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.name_info.place(x=5, y=15)
+
+        self.name_infos = Entry(self.bottom1, width=15, font=('arial 18 bold'), bg='white')
+        self.name_infos.place(x=55, y=10)
+        # self.name_infos.focus()
+
+        var1 = IntVar()
+        self.chkbtn3 = Checkbutton(self.bottom1, text="Nam", variable=var1, font=('arial 14 bold'), fg='black',
+                                   bg='lightblue').place(x=260, y=10)
+        var2 = IntVar()
+        self.chkbtn4 = Checkbutton(self.bottom1, text="Nữ", variable=var2, font=('arial 14 bold'), fg='black',
+                              bg='lightblue').place(x=340, y=10)
+        self.date_s = Label(self.bottom1, text="Từ:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.date_s.place(x=420, y=15)
+        self.from_date = Entry(self.bottom1, font=('arial 18 bold'), width=8)
+        self.from_date.place(x=455, y=10)
+        self.date_s2 = Label(self.bottom1, text="Đến:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.date_s2.place(x=575, y=15)
+        self.from_todate = Entry(self.bottom1, font=('arial 18 bold'), width=8)
+        self.from_todate.place(x=620, y=10)
+
+
+    def Search(self, *args, **kwargs):
+        # =====================================FRAME================================================
+        self.Top = Frame(self.bottom2, width=1000, bd=2, relief=SOLID)
+        self.Top.pack(side=TOP)
+        self.MidFrame = Frame(self.bottom2, width=1000)
+        self.MidFrame.pack(side=TOP)
+        self.RightForm = Frame(self.MidFrame, width=1100)
+        self.RightForm.pack(side=RIGHT)
+
+        # =====================================Table WIDGET=========================================
+        self.scrollbarx = Scrollbar(self.RightForm, orient=HORIZONTAL)
+        self.scrollbary = Scrollbar(self.RightForm, orient=VERTICAL)
+        self.tree = ttk.Treeview(self.RightForm, columns=("MemberID", "Firstname", "Lastname", "Address", "Age"),
+                                 selectmode="extended",
+                                 height=400, yscrollcommand=self.scrollbary.set, xscrollcommand=self.scrollbarx.set)
+
+        self.scrollbary.config(command=self.tree.yview)
+        self.scrollbary.pack(side=RIGHT, fill=Y)
+        self.scrollbarx.config(command=self.tree.xview)
+        self.scrollbarx.pack(side=BOTTOM, fill=X)
+        self.tree.heading('MemberID', text="MemberID", anchor=W)
+        self.tree.heading('Firstname', text="Firstname", anchor=W)
+        self.tree.heading('Lastname', text="Lastname", anchor=W)
+        self.tree.heading('Address', text="Address", anchor=W)
+        self.tree.heading('Age', text="Age", anchor=W)
+        self.tree.column('#0', stretch=NO, minwidth=0, width=0)
+        self.tree.column('#1', stretch=NO, minwidth=0, width=0)
+        self.tree.column('#2', stretch=NO, minwidth=0, width=250)
+        self.tree.column('#3', stretch=NO, minwidth=0, width=250)
+        self.tree.column('#4', stretch=NO, minwidth=0, width=250)
+        self.tree.column('#5', stretch=NO, minwidth=0, width=250)
+        self.tree.pack()
+
+        self.tree.delete(*self.tree.get_children())
+        conn = sqlite3.connect("db_member.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM `member` WHERE `firstname` LIKE ? OR `lastname` LIKE ?",('%' + str(self.name_infos.get()) + '%', '%' + str(self.name_infos.get()) + '%'))
+        fetch = cursor.fetchall()
+        for data in fetch:
+            self.tree.insert('', 'end', values=(data))
+        cursor.close()
+        conn.close()
+
 
 
     def ajax(self, *args, **kwargs):
-        self.right = Frame(root, width=1100, height=53, bg='white')
-        self.right.pack(side=TOP)
-
-        self.bottom = Frame(root, width=1100, height=220, bg='lightblue')
-        self.bottom.pack(side=TOP)
-
-        self.bottom1 = Frame(root, width=1100, height=60, bg='yellow')
-        self.bottom1.pack(side=TOP)
-
-        self.bottom2 = Frame(root, width=1100, height=600, bg='green')
-        self.bottom2.pack(side=TOP)
-
         # button control system
         self.bt_add_patient = Button(self.right, text="Thêm bệnh nhân", width=15, height=2, font=('arial 12 bold'),
                                      bg='white', command=self.ajax)
         self.bt_add_patient.place(x=0, y=0)
 
         self.bt_open_file = Button(self.right, text="Mở hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
-                                   command= self.get_itemsdatabase)
+                                   )#command= self.get_itemsdatabase
         self.bt_open_file.place(x=160, y=0)
         #
         self.bt_save_file = Button(self.right, text="lưu hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
@@ -158,7 +225,6 @@ class Application:
         self.sex = Label(self.bottom, text="Giới tính:", font=('arial 12 bold'),
                          fg='black', bg='lightblue')
         self.sex.place(x=800, y=5)
-        #
         var3 = IntVar()
         var4 = IntVar()
         self.chkbtn1 = Checkbutton(self.bottom, text='Nam', variable=var3, font=('arial 18 bold'), fg='black',
@@ -166,57 +232,7 @@ class Application:
         self.chkbtn2 = Checkbutton(self.bottom, text='Nữ', variable=var4, font=('arial 18 bold'), fg='black',
                                    bg='lightblue').place(x=900, y=25)
 
-        self.seachinfo = Button(self.bottom1, text="Tìm kiếm", width=15, height=1, font=('arial 18 bold'), bg='orange',
-                                command=self.ajax2)
-        self.seachinfo.place(x=800, y=5)
-
-        self.name_info = Label(self.bottom1, text="Tên:", font=('arial 12 bold'), fg='black', bg='lightblue')
-        self.name_info.place(x=5, y=15)
-
-        self.name_infos = Entry(self.bottom1, width=15, font=('arial 18 bold'), bg='white')
-        self.name_infos.place(x=55, y=10)
-        #self.name_infos.focus()
-
-        var1 = IntVar()
-        self.chkbtn3 = Checkbutton(self.bottom1, text="Nam", variable=var1, font=('arial 14 bold'), fg='black',
-                                   bg='lightblue').place(x=260, y=10)
-        var2 = IntVar()
-        chkbtn4 = Checkbutton(self.bottom1, text="Nữ", variable=var2, font=('arial 14 bold'), fg='black',
-                              bg='lightblue').place(x=340, y=10)
-        self.date_s = Label(self.bottom1, text="Từ:", font=('arial 12 bold'), fg='black', bg='lightblue')
-        self.date_s.place(x=420, y=15)
-        self.from_date = Entry(self.bottom1, font=('arial 18 bold'), width=8)
-        self.from_date.place(x=455, y=10)
-        self.date_s2 = Label(self.bottom1, text="Đến:", font=('arial 12 bold'), fg='black', bg='lightblue')
-        self.date_s2.place(x=575, y=15)
-        self.from_todate = Entry(self.bottom1, font=('arial 18 bold'), width=8)
-        self.from_todate.place(x=620, y=10)
         # infseach
-        self.s_stt = Label(self.bottom2, text="Stt", font=('arial 12 bold'), fg='black', bg='lightblue', width=5)
-        self.s_stt.place(x=0, y=5)
-        self.s_name = Label(self.bottom2, text="Họ và tên", font=('arial 12 bold'), fg='black', bg='lightblue',
-                            width=20)
-        self.s_name.place(x=65, y=5)
-        self.s_address = Label(self.bottom2, text="Địa chỉ", font=('arial 12 bold'), fg='black', bg='lightblue',
-                               width=25)
-        self.s_address.place(x=275, y=5)
-        self.s_sexgt = Label(self.bottom2, text="Giới tính", font=('arial 12 bold'), fg='black', bg='lightblue',
-                             width=8)
-        self.s_sexgt.place(x=535, y=5)
-        self.s_born = Label(self.bottom2, text="Tuổi", font=('arial 12 bold'), fg='black', bg='lightblue', width=8)
-        self.s_born.place(x=625, y=5)
-        self.s_job = Label(self.bottom2, text="Nghề nghiệp", font=('arial 12 bold'), fg='black', bg='lightblue',
-                           width=15)
-        self.s_job.place(x=715, y=5)
-        self.s_sbh = Label(self.bottom2, text="Số bảo hiểm", font=('arial 12 bold'), fg='black', bg='lightblue',
-                           width=10)
-        self.s_sbh.place(x=875, y=5)
-
-        self.productname = Label(self.bottom2, text="", font=('arial 10 bold'), bg='white', fg='steelblue')
-        self.productname.place(x=0, y=30)
-        self.pprice = Label(self.bottom2, text="", font=('arial 10 bold'), bg='white', fg='steelblue')
-        self.pprice.place(x=0, y=60)
-
 
 
     def add_to_cart(self, *args, **kwargs):
@@ -226,7 +242,7 @@ class Application:
         self.bottom2.destroy()
 
     def delete_text(self, *args, **kwargs):
-        num = id + 1
+
         self.name_p.delete(0, END)
         self.adr_p.delete(0, END)
         self.y_b.delete(0, END)
@@ -234,39 +250,38 @@ class Application:
         self.stom.delete(0, END)
         self.nbh.delete(0, END)
 
-    def ajax2(self, *args, **kwargs):
-        self.get_id = self.name_infos.get()
-        # get the products info with that id and fill it in the labels above
-        query = "SELECT * FROM inventory WHERE name=?"
-        result = c.execute(query, (self.get_id,))
-        for self.r in result:
-            self.get_id = self.r[0]
-            self.get_name = self.r[1]
-            self.get_price = self.r[4]
-            self.get_stock = self.r[2]
-        self.productname.configure(text="Product's Name: " + str(self.get_name))
-        self.pprice.configure(text="Price: Rs. " + str(self.get_price))
+    # def ajax2(self, *args, **kwargs):
+    #     self.get_id = self.name_infos.get()
+    #     # get the products info with that id and fill it in the labels above
+    #     query = "SELECT * FROM inventory WHERE name=?"
+    #     result = c.execute(query, (self.get_id,))
+    #     for self.r in result:
+    #         self.get_id = self.r[0]
+    #         self.get_name = self.r[1]
+    #         self.get_price = self.r[4]
+    #         self.get_stock = self.r[2]
+    #     self.productname.configure(text="Product's Name: " + str(self.get_name))
+    #     self.pprice.configure(text="Price: Rs. " + str(self.get_price))
 
 
 
-    def get_itemsdatabase(self, *args, **kwargs):
-
-        self.adname = self.name_p.get()
-        self.adjob = self.jobw.get()
-        self.adddr = self.adr_p.get()
-        self.aborn = self.y_b.get()
-        self.asymptom = self.stom.get()
-        self.ainsurance = self.nbh.get()
-
-        if self.adname== '' or self.adddr== '' or self.asymptom == '' or self.adjob == '':
-            tkinter.messagebox.showinfo("Error", "Please Fill all the entries.")
-        else:
-            sql = "INSERT INTO inventory (name, stock, cp, sp, totalcp, totalsp, assumed_profit, vendor, vendor_phoneno ) VALUES(?,?,?,?,?,?,?,?,?)"
-            c.execute(sql, (self.adname, self.adjob, self.adddr, self.aborn, self.asymptom, self.ainsurance, self.ainsurance,self.ainsurance,self.ainsurance))
-            conn.commit()
-            # textbox insert
-            tkinter.messagebox.showinfo("Success", "Successfully added to the database")
-
+    # def get_itemsdatabase(self, *args, **kwargs):
+    #
+    #     self.adname = self.name_p.get()
+    #     self.adjob = self.jobw.get()
+    #     self.adddr = self.adr_p.get()
+    #     self.aborn = self.y_b.get()
+    #     self.asymptom = self.stom.get()
+    #     self.ainsurance = self.nbh.get()
+    #
+    #     if self.adname== '' or self.adddr== '' or self.asymptom == '' or self.adjob == '':
+    #         tkinter.messagebox.showinfo("Error", "Please Fill all the entries.")
+    #     else:
+    #         sql = "INSERT INTO inventory (name, stock, cp, sp, totalcp, totalsp, assumed_profit, vendor, vendor_phoneno ) VALUES(?,?,?,?,?,?,?,?,?)"
+    #         c.execute(sql, (self.adname, self.adjob, self.adddr, self.aborn, self.asymptom, self.ainsurance, self.ainsurance,self.ainsurance,self.ainsurance))
+    #         conn.commit()
+    #         # textbox insert
+    #         tkinter.messagebox.showinfo("Success", "Successfully added to the database")
 
 
     def add_to_bn(self, *args, **kwargs):
@@ -408,7 +423,7 @@ class Application:
                         cv2.waitKey()
                         if (self.logic == 2):
                             self.value = self.value + 1
-                            cv2.imwrite('H:/phanmemnoisoi/image\%s.png' % (self.value), frame)
+                            cv2.imwrite('anh\%s.png' % (self.value), frame)
                             self.logic = 1
                             self.TEXT.setText('your Image have been Saved')
                         if  (self.logic == 3):
