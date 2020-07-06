@@ -19,229 +19,468 @@ from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
 import imutils
 
+# conn = sqlite3.connect("Database\store.db")
+# c = conn.cursor()
+# date
 date = datetime.datetime.now().date()
+# temporary lists like sessions
+products_list = []
+product_price = []
+product_quantity = []
+product_id = []
+
+# list for labels
 root = Tk()
 root.title("COMPANY BOSSCCOM")
-root.geometry("1360x786+0+0")
-root.resizable(0, 0)
+labels_list = []
 image = PhotoImage(file="ngang1.png")
 img_resize = image.subsample(1, 1)
 
-def Database():
-    conn = sqlite3.connect("db_member.db")
-    cursor = conn.cursor()
-    cursor.execute(
-        "CREATE TABLE IF NOT EXISTS `member` (mem_id INTEGER NOT NULL PRIMARY KEY  AUTOINCREMENT, firstname TEXT, lastname TEXT, address TEXT, age TEXT)")
-    cursor.execute("SELECT * FROM `member`")
-    if cursor.fetchone() is None:
-        cursor.execute(
-            "INSERT INTO `member` (firstname, lastname, address, age) VALUES('John', 'Smith', 'Pallet Town', '20')")
-        cursor.execute(
-            "INSERT INTO `member` (firstname, lastname, address, age) VALUES('Claire', 'Temple', 'Racoon City', '19')")
-        conn.commit()
+class Application:
+    def __init__(self, master, *args, **kwargs):
+        self.master = master
+        # frame
+        self.left1 = Frame(master, width=1360, height=96, bg='white')
+        self.left1.pack(side=TOP)
+        Label(self.left1, image=img_resize, bg="white", relief=SUNKEN).pack(pady=5)
 
-    cursor.execute("SELECT * FROM `member` ORDER BY `lastname` ASC")
-    fetch = cursor.fetchall()
-    for data in fetch:
-        tree.insert('', 'end', values=(data))
-    cursor.close()
-    conn.close()
+        self.left = Frame(master, width=320, height=1300, bg='white')
+        self.left.pack(side=LEFT)
+
+        self.right = Frame(root, width=1100, height=53, bg='white')
+        self.right.pack(side=TOP)
+
+        self.bottom = Frame(root, width=1100, height=220, bg='lightblue')
+        self.bottom.pack(side=TOP)
+
+        self.bottom1 = Frame(root, width=1100, height=60, bg='yellow')
+        self.bottom1.pack(side=TOP)
+
+        self.bottom2 = Frame(root, width=1100, height=600, bg='lightblue')
+        self.bottom2.pack(side=TOP)
+
+        self.Top = Frame(self.bottom2, width=1000, bd=2, relief=SOLID)
+        self.Top.pack(side=TOP)
+        self.MidFrame = Frame(self.bottom2, width=1000)
+        self.MidFrame.pack(side=TOP)
+        self.RightForm = Frame(self.MidFrame, width=1100)
+        self.RightForm.pack(side=RIGHT)
+
+        # components
+        self.date_l = Label(self.left, text="Today's Date: " + str(date), font=('arial 16 bold'), bg='lightblue',
+                            fg='white')
+        self.date_l.place(x=20, y=0)
+
+        # button
+        self.bt_st_catalog = Button(self.left, text="Hồ sơ bệnh nhân", width=18, height=2, font=('arial 18 bold'),
+                                    bg='orange', command=self.ajax)
+        self.bt_st_catalog.place(x=8, y=45)
+
+        self.bt_st_form = Button(self.left, text="Nội soi", width=18, height=2, font=('arial 18 bold'), bg='orange',
+                                 command=self.endoscopy)
+        self.bt_st_form.place(x=8, y=135)
+
+        self.bt_patient = Button(self.left, text="Biểu mẫu in", width=18, height=2, font=('arial 18 bold'), bg='orange',
+                                 command=self.add_to_bn)
+        self.bt_patient.place(x=8, y=225)
+
+        self.bt_endoscop = Button(self.left, text="Danh mục khám", width=18, height=2, font=('arial 18 bold'),
+                                  bg='orange', command=self.createNewWindow)
+        self.bt_endoscop.place(x=8, y=315)
+
+        self.bt_diagnose = Button(self.left, text="Danh mục chẩn đoán", width=18, height=2, font=('arial 18 bold'),
+                                  bg='orange', command=self.createNewWindowadd1)
+        self.bt_diagnose.place(x=8, y=405)
+
+        self.bt_exit1 = Button(self.left, text="Thoát", width=18, height=2, font=('arial 18 bold'), bg='orange',
+                               command=self.quit)
+        self.bt_exit1.place(x=8, y=495)
+
+        self.seachinfo = Button(self.bottom1, text="Tìm kiếm", width=15, height=1, font=('arial 18 bold'), bg='orange',
+                                command=self.Search)
+        self.seachinfo.place(x=800, y=5)
+
+        self.name_info = Label(self.bottom1, text="Tên:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.name_info.place(x=5, y=15)
+
+        self.name_infos = Entry(self.bottom1, width=15, font=('arial 18 bold'), bg='white')
+        self.name_infos.place(x=55, y=10)
+        # self.name_infos.focus()
+
+        var1 = IntVar()
+        self.chkbtn3 = Checkbutton(self.bottom1, text="Nam", variable=var1, font=('arial 14 bold'), fg='black',
+                                   bg='lightblue').place(x=260, y=10)
+        var2 = IntVar()
+        self.chkbtn4 = Checkbutton(self.bottom1, text="Nữ", variable=var2, font=('arial 14 bold'), fg='black',
+                              bg='lightblue').place(x=340, y=10)
+        self.date_s = Label(self.bottom1, text="Từ:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.date_s.place(x=420, y=15)
+        self.from_date = Entry(self.bottom1, font=('arial 18 bold'), width=8)
+        self.from_date.place(x=455, y=10)
+        self.date_s2 = Label(self.bottom1, text="Đến:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.date_s2.place(x=575, y=15)
+        self.from_todate = Entry(self.bottom1, font=('arial 18 bold'), width=8)
+        self.from_todate.place(x=620, y=10)
 
 
-def Search():
-    if SEARCH.get() != "":
-        tree.delete(*tree.get_children())
-        conn = sqlite3.connect("db_member.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM `member` WHERE `firstname` LIKE ? OR `lastname` LIKE ?",
-                       ('%' + str(SEARCH.get()) + '%', '%' + str(SEARCH.get()) + '%'))
-        fetch = cursor.fetchall()
-        for data in fetch:
-            tree.insert('', 'end', values=(data))
-        cursor.close()
-        conn.close()
+    def Search(self, *args, **kwargs):
+
+        if self.name_infos.get() != "":
+            self.name_infos.delete(0, tk.END)
+            # =====================================Table WIDGET=========================================
+            self.scrollbarx = Scrollbar(self.RightForm, orient=HORIZONTAL)
+            self.scrollbary = Scrollbar(self.RightForm, orient=VERTICAL)
+            self.tree = ttk.Treeview(self.RightForm, columns=("MemberID", "Firstname", "Lastname", "Address", "Age"),
+                                     selectmode="extended",
+                                     height=400, yscrollcommand=self.scrollbary.set, xscrollcommand=self.scrollbarx.set)
+            self.scrollbary.config(command=self.tree.yview)
+            self.scrollbary.pack(side=RIGHT, fill=Y)
+            self.scrollbarx.config(command=self.tree.xview)
+            self.scrollbarx.pack(side=BOTTOM, fill=X)
+            self.tree.heading('MemberID', text="MemberID", anchor=W)
+            self.tree.heading('Firstname', text="Firstname", anchor=W)
+            self.tree.heading('Lastname', text="Lastname", anchor=W)
+            self.tree.heading('Address', text="Address", anchor=W)
+            self.tree.heading('Age', text="Age", anchor=W)
+            self.tree.column('#0', stretch=NO, minwidth=0, width=0)
+            self.tree.column('#1', stretch=NO, minwidth=0, width=0)
+            self.tree.column('#2', stretch=NO, minwidth=0, width=250)
+            self.tree.column('#3', stretch=NO, minwidth=0, width=250)
+            self.tree.column('#4', stretch=NO, minwidth=0, width=250)
+            self.tree.column('#5', stretch=NO, minwidth=0, width=250)
+            self.tree.pack()
+
+            self.tree.delete(*self.tree.get_children())
+            conn = sqlite3.connect("db_member.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM `member` WHERE `firstname` LIKE ? OR `lastname` LIKE ?",
+                           ('%' + str(self.name_infos.get()) + '%', '%' + str(self.name_infos.get()) + '%'))
+            fetch = cursor.fetchall()
+            for data in fetch:
+                self.tree.insert('', 'end', values=(data))
+            cursor.close()
+            conn.close()
+        else:
+            self.tree.delete(0, tk.END)
 
 
 
-def ajax():
+
+    def ajax(self, *args, **kwargs):
         # button control system
-    bt_add_patient = Button(right, text="Thêm bệnh nhân", width=15, height=2, font=('arial 12 bold'),
-                                     bg='white')
-    bt_add_patient.place(x=0, y=0)
+        self.bt_add_patient = Button(self.right, text="Thêm bệnh nhân", width=15, height=2, font=('arial 12 bold'),
+                                     bg='white', command=self.ajax)
+        self.bt_add_patient.place(x=0, y=0)
 
-    bt_open_file = Button(right, text="Mở hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
-                                   )
-    bt_open_file.place(x=160, y=0)
+        self.bt_open_file = Button(self.right, text="Mở hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
+                                   )#command= self.get_itemsdatabase
+        self.bt_open_file.place(x=160, y=0)
         #
-    bt_save_file = Button(right, text="lưu hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white')
-    bt_save_file.place(x=320, y=0)
+        self.bt_save_file = Button(self.right, text="lưu hồ sơ", width=15, height=2, font=('arial 12 bold'), bg='white',
+                                   command=self.endoscopy)
+        self.bt_save_file.place(x=320, y=0)
         #
-    bt_delele1 = Button(right, text="Xóa", width=15, height=2, font=('arial 12 bold'), bg='white')
-    bt_delele1.place(x=480, y=0)
+        self.bt_delele1 = Button(self.right, text="Xóa", width=15, height=2, font=('arial 12 bold'), bg='white',
+                                 command=self.delete_text)
+        self.bt_delele1.place(x=480, y=0)
         #
-    bt_thoat = Button(right, text="Đóng", width=15, height=2, font=('arial 12 bold'), bg='white')
-    bt_thoat.place(x=640, y=0)
+        self.bt_thoat = Button(self.right, text="Đóng", width=15, height=2, font=('arial 12 bold'), bg='white',
+                               command=self.add_to_cart)
+        self.bt_thoat.place(x=640, y=0)
 
-    tenbenhnhan = Label(bottom, text="Tên bệnh nhân:", font=('arial 12 bold'), fg='black', bg='lightblue')
-    tenbenhnhan.place(x=15, y=5)
-
-
-    name_p = Entry(bottom, font=('arial 24 bold'), width=20)
-    name_p.place(x=5, y=30)
-    name_p.focus()
-
-    adr = Label(bottom, text="Địa chỉ:", font=('arial 12 bold'), fg='black', bg='lightblue')
-    adr.place(x=15, y=75)
-
-    adr_p = Entry(bottom, font=('arial 24 bold'), width=20)
-    adr_p.place(x=5, y=100)
+        self.tenbenhnhan = Label(self.bottom, text="Tên bệnh nhân:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.tenbenhnhan.place(x=15, y=5)
 
 
-    year_b = Label(bottom, text="Năm sinh:", font=('arial 12 bold'), fg='black', bg='lightblue')
-    year_b.place(x=15, y=150)
+        self.name_p = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.name_p.place(x=5, y=30)
+        self.name_p.focus()
 
-    y_b = Entry(bottom, font=('arial 24 bold'), width=20)
-    y_b.place(x=5, y=175)
+        self.adr = Label(self.bottom, text="Địa chỉ:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.adr.place(x=15, y=75)
+
+        self.adr_p = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.adr_p.place(x=5, y=100)
 
 
-    job = Label(bottom, text="Nghề nghiệp:", font=('arial 12 bold'), fg='black', bg='lightblue')
-    job.place(x=425, y=5)
-    jobw = Entry(bottom, font=('arial 24 bold'), width=20)
-    jobw.place(x=410, y=30)
+        self.year_b = Label(self.bottom, text="Năm sinh:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.year_b.place(x=15, y=150)
 
-    st = Label(bottom, text="Triệu chứng:", font=('arial 12 bold'), fg='black', bg='lightblue')
-    st.place(x=420, y=75)
+        self.y_b = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.y_b.place(x=5, y=175)
 
-    stom = Entry(bottom, font=('arial 24 bold'), width=20)
-    stom.place(x=410, y=100)
 
-    sbh = Label(bottom, text="Số bảo hiểm:", font=('arial 12 bold'), fg='black', bg='lightblue')
-    sbh.place(x=420, y=150)
+        self.job = Label(self.bottom, text="Nghề nghiệp:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.job.place(x=425, y=5)
+        self.jobw = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.jobw.place(x=410, y=30)
 
-    nbh = Entry(bottom, font=('arial 24 bold'), width=20)
-    nbh.place(x=410, y=175)
+        self.st = Label(self.bottom, text="Triệu chứng:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.st.place(x=420, y=75)
 
-    sex = Label(bottom, text="Giới tính:", font=('arial 12 bold'),
+        self.stom = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.stom.place(x=410, y=100)
+
+        self.sbh = Label(self.bottom, text="Số bảo hiểm:", font=('arial 12 bold'), fg='black', bg='lightblue')
+        self.sbh.place(x=420, y=150)
+
+        self.nbh = Entry(self.bottom, font=('arial 24 bold'), width=20)
+        self.nbh.place(x=410, y=175)
+
+        self.sex = Label(self.bottom, text="Giới tính:", font=('arial 12 bold'),
                          fg='black', bg='lightblue')
-    sex.place(x=800, y=5)
-        #
-    var3 = IntVar()
-    var4 = IntVar()
-    chkbtn1 = Checkbutton(bottom, text='Nam', variable=var3, font=('arial 18 bold'), fg='black',
+        self.sex.place(x=800, y=5)
+        var3 = IntVar()
+        var4 = IntVar()
+        self.chkbtn1 = Checkbutton(self.bottom, text='Nam', variable=var3, font=('arial 18 bold'), fg='black',
                                    bg='lightblue').place(x=810, y=25)
-    chkbtn2 = Checkbutton(bottom, text='Nữ', variable=var4, font=('arial 18 bold'), fg='black',
+        self.chkbtn2 = Checkbutton(self.bottom, text='Nữ', variable=var4, font=('arial 18 bold'), fg='black',
                                    bg='lightblue').place(x=900, y=25)
 
-    seachinfo = Button(bottom1, text="Tìm kiếm", width=15, height=1, font=('arial 18 bold'), bg='orange')
-    seachinfo.place(x=800, y=5)
-
-    name_info = Label(bottom1, text="Tên:", font=('arial 12 bold'), fg='black', bg='lightblue')
-    name_info.place(x=5, y=15)
-
-    name_infos = Entry(bottom1, width=15, font=('arial 18 bold'), bg='white')
-    name_infos.place(x=55, y=10)
-        #self.name_infos.focus()
+        # infseach
 
 
+    def add_to_cart(self, *args, **kwargs):
+        self.right.destroy()
+        self.bottom.destroy()
+        self.bottom1.destroy()
+
+
+    def delete_text(self, *args, **kwargs):
+
+        self.name_p.delete(0, END)
+        self.adr_p.delete(0, END)
+        self.y_b.delete(0, END)
+        self.jobw.delete(0, END)
+        self.stom.delete(0, END)
+        self.nbh.delete(0, END)
+
+    # def ajax2(self, *args, **kwargs):
+    #     self.get_id = self.name_infos.get()
+    #     # get the products info with that id and fill it in the labels above
+    #     query = "SELECT * FROM inventory WHERE name=?"
+    #     result = c.execute(query, (self.get_id,))
+    #     for self.r in result:
+    #         self.get_id = self.r[0]
+    #         self.get_name = self.r[1]
+    #         self.get_price = self.r[4]
+    #         self.get_stock = self.r[2]
+    #     self.productname.configure(text="Product's Name: " + str(self.get_name))
+    #     self.pprice.configure(text="Price: Rs. " + str(self.get_price))
 
 
 
+    # def get_itemsdatabase(self, *args, **kwargs):
+    #
+    #     self.adname = self.name_p.get()
+    #     self.adjob = self.jobw.get()
+    #     self.adddr = self.adr_p.get()
+    #     self.aborn = self.y_b.get()
+    #     self.asymptom = self.stom.get()
+    #     self.ainsurance = self.nbh.get()
+    #
+    #     if self.adname== '' or self.adddr== '' or self.asymptom == '' or self.adjob == '':
+    #         tkinter.messagebox.showinfo("Error", "Please Fill all the entries.")
+    #     else:
+    #         sql = "INSERT INTO inventory (name, stock, cp, sp, totalcp, totalsp, assumed_profit, vendor, vendor_phoneno ) VALUES(?,?,?,?,?,?,?,?,?)"
+    #         c.execute(sql, (self.adname, self.adjob, self.adddr, self.aborn, self.asymptom, self.ainsurance, self.ainsurance,self.ainsurance,self.ainsurance))
+    #         conn.commit()
+    #         # textbox insert
+    #         tkinter.messagebox.showinfo("Success", "Successfully added to the database")
+
+
+    def add_to_bn(self, *args, **kwargs):
+        addWindow = Toplevel(root)
+        addWindow.title("Set form print")
+        addWindow.geometry("600x350")
+        self.rightadd2 = Frame(addWindow, width=600, height=450, bg='lightblue')
+        self.rightadd2.pack(side=TOP)
+
+        self.adr2 = Label(self.rightadd2, text="Phòng khám:", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.adr2.place(x=10, y=10)
+        self.adr2_p = Entry(self.rightadd2, font=('arial 18 bold'), width=32)
+        self.adr2_p.place(x=150, y=10)
+
+        self.doctor = Label(self.rightadd2, text=" Bác sĩ :", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.doctor.place(x=10, y=85)
+
+        self.doctor_p = Entry(self.rightadd2, font=('arial 18 bold'), width=32)
+        self.doctor_p.place(x=150, y=75)
+
+        self.n2 = Label(self.rightadd2, text="Địa chỉ:", font=('arial 16 bold'), fg='black', bg='lightblue')
+        self.n2.place(x=10, y=150)
+
+        self.n2_p = Entry(self.rightadd2, font=('arial 18 bold'), width=32)
+        self.n2_p.place(x=150, y=150)
+
+        self.add_dt = Button(self.rightadd2, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                             )
+        self.add_dt.place(x=10, y=260)
+
+        self.add_dl = Button(self.rightadd2, text="Sửa", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                             )
+        self.add_dl.place(x=200, y=260)
+
+        self.add_dltd = Button(self.rightadd2, text="Xóa", width=12, height=1, font=('arial 18 bold'), bg='orange',
+                               )
+        self.add_dltd.place(x=390, y=260)
+
+
+    def createNewWindow(self, *args, **kwarg):
+        newWindowaddf = Toplevel(root)
+        newWindowaddf.title("add infomation")
+        newWindowaddf.geometry("600x350")
+
+        self.rightw2 = Frame(newWindowaddf, width=600, height=330, bg='lightblue')
+        self.rightw2.pack(side=TOP)
+        self.rightw3 = Frame(newWindowaddf, width=600, height=120, bg='lightblue')
+        self.rightw3.pack(side=BOTTOM)
+
+        listbox = Listbox(self.rightw2, height=12,width=40,bg="lightblue",activestyle='dotbox',font="Helvetica",fg="yellow")
+        listbox.pack()
+
+        self.add_if2 = Entry(self.rightw3, font=('arial 18 bold'), width=25)
+        self.add_if2.place(x=140, y=10)
+
+        self.add_ifmt = Button(self.rightw3, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange')
+        self.add_ifmt.place(x=5, y=55)
+
+        self.add_dltifmt = Button(self.rightw3, text="Lưu", width=12, height=1, font=('arial 18 bold'),
+                                  bg='orange')
+        self.add_dltifmt.place(x=200, y=55)
+
+        self.add_dltd = Button(self.rightw3, text="Xóa", width=12, height=1, font=('arial 18 bold'),
+                               bg='orange')
+        self.add_dltd.place(x=395, y=55)
+
+
+    def createNewWindowadd1(self, *args, **kwarg):
+        newWindowaddf2 = Toplevel(root)
+        newWindowaddf2.title("add infomation")
+        newWindowaddf2.geometry("600x350")
+
+        self.rightw2 = Frame(newWindowaddf2, width=600, height=330, bg='lightblue')
+        self.rightw2.pack(side=TOP)
+        self.rightw3 = Frame(newWindowaddf2, width=600, height=120, bg='lightblue')
+        self.rightw3.pack(side=BOTTOM)
+
+        listboxadd1 = Listbox(self.rightw2, height=12,width=40,bg="lightblue",activestyle='dotbox',font="Helvetica",fg="yellow")
+        listboxadd1.pack()
+
+        self.add_if3 = Entry(self.rightw3, font=('arial 18 bold'), width=25)
+        self.add_if3.place(x=140, y=10)
+
+        self.add_ifmt3 = Button(self.rightw3, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange')
+        self.add_ifmt3.place(x=5, y=55)
+
+        self.add_dltifmt3 = Button(self.rightw3, text="Lưu", width=12, height=1, font=('arial 18 bold'),
+                                  bg='orange')
+        self.add_dltifmt3.place(x=200, y=55)
+
+        self.add_dltd3 = Button(self.rightw3, text="Xóa", width=12, height=1, font=('arial 18 bold'),
+                               bg='orange')
+        self.add_dltd3.place(x=395, y=55)
+
+
+    def show(self):
+        root.update()
+        root.deiconify()
+
+    def hide(self):
+        root.update()
+        root.withdraw()
+
+    def quit(self):
+        root.destroy()
+
+    def endoscopy(self):
+        class tehseencode(QDialog):
+            def __init__(self):
+                super(tehseencode, self).__init__()
+                loadUi("untitled2.ui", self)
+                self.logic = 0
+                self.value = 1
+                self.SHOW.clicked.connect(self.onClicked)
+                self.TEXT.setText("Kindly Press 'Show' to connect with webcam.")
+                self.CAPTURE.clicked.connect(self.CaptureClicked)
+                self.NEXT_3.clicked.connect(self.exitpro)
+                self.CAPTURE_2.clicked.connect(self.f2vrec)
+                self.NEXT_2.clicked.connect(self.w1)
+
+            @pyqtSlot()
+            def onClicked(self):
+                self.TEXT.setText('Kindly Press "Capture Image " to Capture image')
+                cap = cv2.VideoCapture(0)
+                fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                op = cv2.VideoWriter('Sample1.avi', fourcc, 11.0, (800,600))
+
+                # while (True):
+                # print(cap.read())
+                while (cap.isOpened()):
+                    ret, frame = cap.read()
+                    frame = imutils.resize(frame, width=800,height=600)
+                    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+
+                    if ret == True:
+                        print('here')
+                        self.displayImage(frame, 1)
+                        cv2.waitKey()
+                        if (self.logic == 2):
+                            self.value = self.value + 1
+                            cv2.imwrite('anh\%s.png' % (self.value), frame)
+                            self.logic = 1
+                            self.TEXT.setText('your Image have been Saved')
+                        if  (self.logic == 3):
+                            #self.displayImage(frame, 1)
+                            op.write(frame)
+
+                        if  (self.logic == 4):
+                            cap.release()
+                            break
+
+                    else:
+                        print('not found')
+                cap.release()
+                cv2.destroyAllWindows()
+
+            def CaptureClicked(self):
+                self.logic = 2
+
+            def displayImage(self, img, window=1):
+                qformat = QImage.Format_Indexed8
+                if len(img.shape) == 3:
+                    if (img.shape[2]) == 4:
+                        qformat = QImage.Format_RGBA888
+                    else:
+                        qformat = QImage.Format_RGB888
+                img = QImage(img, img.shape[1], img.shape[0], qformat)
+                img = img.rgbSwapped()
+                self.imgLabel.setPixmap(QPixmap.fromImage(img))
+                self.imgLabel.setAlignment(QtCore.Qt.AlignLeft| QtCore.Qt.AlignLeft)
+
+            def exitpro(self):
+                self.logic = 4
+
+
+            def f2vrec(self):
+                self.logic = 3
+            def w1(self):
+
+                window.close()
+                self.logic = 4
+
+        window = tehseencode()
+        window.show()
+        try:
+            sys.exit(app.exec_())
+        except:
+            print('excitng')
 
 
 
-SEARCH = StringVar()
+app = QApplication(sys.argv)
+b = Application(root)
 
-
-left1 = Frame(root, width=1360, height=96, bg='white')
-left1.pack(side=TOP)
-Label(left1, image=img_resize, bg="white", relief=SUNKEN).pack(pady=5)
-
-left = Frame(root, width=320, height=786, bg='white')
-left.pack(side=LEFT)
-right = Frame(root, width=1100, height=53, bg='white')
-right.pack(side=TOP)
-bottom = Frame(root, width=1100, height=220, bg='lightblue')
-bottom.pack(side=TOP)
-bottom1 = Frame(root, width=1100, height=60, bg='yellow')
-bottom1.pack(side=TOP)
-bottom2 = Frame(root, width=1100, height=600, bg='green')
-bottom2.pack(side=TOP)
-# =====================================FRAME================================================
-# Top = Frame(root, width=500, bd=1, relief=SOLID)
-# Top.pack(side=TOP)
-MidFrame = Frame(root, width=500)
-MidFrame.pack(side=TOP)
-LeftForm = Frame(MidFrame, width=100)
-LeftForm.pack(side=LEFT)
-RightForm = Frame(MidFrame, width=500)
-RightForm.pack(side=RIGHT)
-    # =====================================LABEL WIDGET=========================================
-lbl_title = Label(bottom2, width=500, font=('arial', 18), text="Python - Search Query In SQLite")
-lbl_title.pack(side=TOP, fill=X)
-lbl_search = Label(LeftForm, font=('arial', 15), text="Search here...")
-lbl_search.pack(side=TOP)
-
-    # =====================================ENTRY WIDGET=========================================
-search = Entry(LeftForm, textvariable=SEARCH)
-search.pack(side=TOP, pady=10)
-
-    # =====================================BUTTON WIDGET========================================
-btn_search = Button(LeftForm, text="Search", bg="#006dcc", command=Search)
-btn_search.pack(side=LEFT)
-btn_reset = Button(LeftForm, text="Reset")
-btn_reset.pack(side=LEFT)
-    # =====================================Table WIDGET=========================================
-scrollbarx = Scrollbar(RightForm, orient=HORIZONTAL)
-scrollbary = Scrollbar(RightForm, orient=VERTICAL)
-tree = ttk.Treeview(RightForm, columns=("MemberID", "Firstname", "Lastname", "Address", "Age"),
-                        selectmode="extended",
-                        height=400, yscrollcommand=scrollbary.set, xscrollcommand=scrollbarx.set)
-scrollbary.config(command=tree.yview)
-scrollbary.pack(side=RIGHT, fill=Y)
-scrollbarx.config(command=tree.xview)
-scrollbarx.pack(side=BOTTOM, fill=X)
-tree.heading('MemberID', text="MemberID", anchor=W)
-tree.heading('Firstname', text="Firstname", anchor=W)
-tree.heading('Lastname', text="Lastname", anchor=W)
-tree.heading('Address', text="Address", anchor=W)
-tree.heading('Age', text="Age", anchor=W)
-tree.column('#0', stretch=NO, minwidth=0, width=0)
-tree.column('#1', stretch=NO, minwidth=0, width=0)
-tree.column('#2', stretch=NO, minwidth=0, width=80)
-tree.column('#3', stretch=NO, minwidth=0, width=120)
-tree.column('#4', stretch=NO, minwidth=0, width=170)
-tree.column('#5', stretch=NO, minwidth=0, width=80)
-tree.pack()
-
-    # components
-date_l = Label(left, text="Today's Date: " + str(date), font=('arial 16 bold'), bg='lightblue',
-                        fg='white')
-date_l.place(x=20, y=0)
-
-    # button
-bt_st_catalog = Button(left, text="Hồ sơ bệnh nhân", width=18, height=2, font=('arial 18 bold'),
-                                bg='orange',command=ajax)
-bt_st_catalog.place(x=8, y=45)
-
-bt_st_form = Button(left, text="Nội soi", width=18, height=2, font=('arial 18 bold'), bg='orange')
-bt_st_form.place(x=8, y=135)
-
-bt_patient = Button(left, text="Biểu mẫu in", width=18, height=2, font=('arial 18 bold'), bg='orange')
-bt_patient.place(x=8, y=225)
-
-bt_endoscop = Button(left, text="Danh mục khám", width=18, height=2, font=('arial 18 bold'),
-                              bg='orange')
-bt_endoscop.place(x=8, y=315)
-
-bt_diagnose = Button(left, text="Danh mục chẩn đoán", width=18, height=2, font=('arial 18 bold'),
-                              bg='orange')
-bt_diagnose.place(x=8, y=405)
-
-bt_exit1 = Button(left, text="Thoát", width=18, height=2, font=('arial 18 bold'), bg='orange')
-bt_exit1.place(x=8, y=495)
-
-
-# =====================================INITIALIZATION=======================================
-if __name__ == '__main__':
-    Database()
-    root.mainloop()
+root.geometry("1360x786+0+0")
+root.mainloop()
