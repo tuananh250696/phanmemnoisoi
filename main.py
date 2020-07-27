@@ -18,8 +18,6 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
 import imutils
-conn = sqlite3.connect("db_member.db")
-cursor = conn.cursor()
 # date
 date = datetime.datetime.now().date()
 # temporary lists like sessions
@@ -36,6 +34,8 @@ image = PhotoImage(file="ngang1.png")
 img_resize = image.subsample(1, 1)
 var = IntVar()
 var1 = IntVar()
+c = StringVar()
+c1 = StringVar()
 
 
 class Application:
@@ -71,13 +71,10 @@ class Application:
                                   bg='orange', command=self.createNewWindow)
         self.bt_endoscop.place(x=8, y=315)
 
-        self.bt_diagnose = Button(self.left, text="Danh mục chẩn đoán", width=18, height=2, font=('arial 18 bold'),
-                                  bg='orange', command=self.createNewWindowadd1)
-        self.bt_diagnose.place(x=8, y=405)
 
         self.bt_exit1 = Button(self.left, text="Thoát", width=18, height=2, font=('arial 18 bold'), bg='orange',
                                command=self.quit)
-        self.bt_exit1.place(x=8, y=495)
+        self.bt_exit1.place(x=8, y=405)
 
     def Search(self, *args, **kwargs):
         # =====================================Table WIDGET=========================================
@@ -97,7 +94,7 @@ class Application:
         self.born_agess.delete(0, tk.END)
 
     def ajax(self, *args, **kwargs):
-        # button control system
+
         self.right = Frame(root, width=1100, height=53, bg='white')
         self.right.pack(side=TOP)
 
@@ -172,17 +169,13 @@ class Application:
         self.nbh = Entry(self.bottom,font=('arial 24 bold'), width=20)
         self.nbh.place(x=410, y=175)
 
-        # label_3 = Label(root, text="Gender", width=20, font=("bold", 10))
-        # label_3.place(x=70, y=230)
-        #
-        # Radiobutton(root, text="Male", padx=5, variable=var, value=1).place(x=810, y=25)
-        # Radiobutton(root, text="Female", padx=20, variable=var, value=2).place(x=900, y=25)
-
-        self.sex = Label(self.bottom, text="Giới tính:", font=('arial 12 bold'),fg='black', bg='lightblue')
-        self.sex.place(x=800, y=5)
-        #
-        Radiobutton(self.bottom, text="Nam", font=('arial 18 bold'),fg='black',bg='lightblue', variable=var, value=1).place(x=810, y=25)
-        Radiobutton(self.bottom,text="Nữ",font=('arial 18 bold'),fg='black',bg='lightblue', variable=var, value=2).place(x=900, y=25)
+        self.droplist = OptionMenu(self.bottom, c, 'NAM', 'NỮ')
+        self.droplist.pack()
+        self.menu = self.droplist.nametowidget(self.droplist.menuname)
+        self.menu.configure(font=('arial 20 bold'))
+        c.set('NAM')
+        self.droplist.config(width=10,font=('arial 18 bold'))
+        self.droplist.place(x=800, y=30)
 
         self.seachinfo = Button(self.bottom1, text="Tìm kiếm", width=15, height=1, font=('arial 18 bold'), bg='orange',
                                 command=self.Search)
@@ -230,19 +223,22 @@ class Application:
         self.tree.heading('Job', text="Job", anchor=W)
         self.tree.heading('Address', text="Address", anchor=W)
         self.tree.heading('Age', text="Age", anchor=W)
+
+
     def get_itemsdatabase(self, *args, **kwargs):
 
         conn = sqlite3.connect("db_member.db")
         cursor = conn.cursor()
 
-        if self.name_p.get()== '' or self.adr_p.get()== '' or self.y_b.get() == '' or self.jobw.get()== '' or self.stom.get()== '' or self.nbh.get() == '':
+        if self.name_p.get()== '' or self.adr_p.get()== '' or self.y_b.get() == '' or self.jobw.get()== '' or self.stom.get()== '' or self.nbh.get() == '' or c.get() == '':
             tkinter.messagebox.showinfo("Error", "Please Fill all the entries.")
         else:
 
-            cursor.execute('INSERT INTO member (name, address, age, job, symptom,sbh ) VALUES(?,?,?,?,?,?)',(self.name_p.get(),self.adr_p.get(), self.y_b.get(),self.jobw.get(), self.stom.get(), self.nbh.get()))
+            cursor.execute('INSERT INTO member (name, address, age, job, symptom,sbh,sex ) VALUES(?,?,?,?,?,?,?)',(self.name_p.get(),self.adr_p.get(), self.y_b.get(),self.jobw.get(), self.stom.get(), self.nbh.get(),c.get()))
             conn.commit()
             # textbox insert
             tkinter.messagebox.showinfo("Success", "Successfully added to the database")
+
 
     def add_to_cart(self, *args, **kwargs):
         self.right.destroy()
@@ -258,6 +254,24 @@ class Application:
         self.jobw.delete(0, END)
         self.stom.delete(0, END)
         self.nbh.delete(0, END)
+
+    def database_print(self, *args, **kwargs):
+
+        namepk = self.adr2_p.get()
+        name_dt = self.n2_p.get()
+        address_pk = self.n2_p.get()
+        conn = sqlite3.connect("db_member.db")
+        cursor = conn.cursor()
+        if namepk== '' or name_dt== '' or address_pk == '':
+            tkinter.messagebox.showinfo("Error", "Please Fill all the entries.")
+
+        else:
+            cursor.execute('CREATE TABLE IF NOT EXISTS print_dt (name_pk TEXT,dt_name TEXT,address TEXT)')
+            cursor.execute('INSERT INTO print_dt (name_pk,dt_name,address) VALUES(?,?,?)',
+                           (namepk, name_dt, address_pk))
+            conn.commit()
+            tkinter.messagebox.showinfo("Success", "Successfully added to the database")
+
 
     def add_to_bn(self, *args, **kwargs):
         addWindow = Toplevel(root)
@@ -283,8 +297,7 @@ class Application:
         self.n2_p = Entry(self.rightadd2, font=('arial 18 bold'), width=32)
         self.n2_p.place(x=150, y=150)
 
-        self.add_dt = Button(self.rightadd2, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange',
-                             )
+        self.add_dt = Button(self.rightadd2, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange',command=self.database_print)
         self.add_dt.place(x=10, y=260)
 
         self.add_dl = Button(self.rightadd2, text="Sửa", width=12, height=1, font=('arial 18 bold'), bg='orange',
@@ -295,61 +308,86 @@ class Application:
                                )
         self.add_dltd.place(x=390, y=260)
 
+    def database_print111(self, *args, **kwargs):
+
+        nameadd22 = c1.get()
+        name_dt22 = self.ad_if2.get()
+
+        conn = sqlite3.connect("db_member.db")
+        cursor = conn.cursor()
+        if nameadd22 == '' or name_dt22 ==  '':
+            tkinter.messagebox.showinfo("Error", "Please Fill all the entries.")
+
+        else:
+            cursor.execute('CREATE TABLE IF NOT EXISTS print_dt22 (name_pk22 TEXT,dt_name22 TEXT)')
+            cursor.execute('INSERT INTO print_dt22 (name_pk22,dt_name22) VALUES(?,?)',
+                           (nameadd22, name_dt22))
+            conn.commit()
+            tkinter.messagebox.showinfo("Success", "Successfully added to the database")
 
     def createNewWindow(self, *args, **kwarg):
         newWindowaddf = Toplevel(root)
         newWindowaddf.title("add infomation")
-        newWindowaddf.geometry("600x350")
+        newWindowaddf.geometry("800x500")
 
-        self.rightw2 = Frame(newWindowaddf, width=600, height=330, bg='lightblue')
-        self.rightw2.pack(side=TOP)
-        self.rightw3 = Frame(newWindowaddf, width=600, height=120, bg='lightblue')
-        self.rightw3.pack(side=BOTTOM)
+        self.rightw2 = Frame(newWindowaddf, width=500, height=500, bg='lightblue')
+        self.rightw2.pack(side=RIGHT)
+        self.rightw3 = Frame(newWindowaddf, width=290, height=500, bg='lightblue')
+        self.rightw3.pack(side=LEFT)
 
-        listbox = Listbox(self.rightw2, height=12,width=40,bg="lightblue",activestyle='dotbox',font="Helvetica",fg="yellow")
-        listbox.pack()
+        self.n3 = Label(self.rightw3, text="Chẩn Đoán:", font=('arial 14 bold'), fg='black', bg='lightblue')
+        self.n3.place(x=10, y=10)
 
-        self.add_if2 = Entry(self.rightw3, font=('arial 18 bold'), width=25)
-        self.add_if2.place(x=140, y=10)
+        self.ad_if2 = Entry(self.rightw3, font=('arial 20 bold'), width=16)
+        self.ad_if2.place(x=10, y=40)
 
-        self.add_ifmt = Button(self.rightw3, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange')
-        self.add_ifmt.place(x=5, y=55)
+        self.n4 = Label(self.rightw3, text="Danh Mục:", font=('arial 14 bold'), fg='black', bg='lightblue')
+        self.n4.place(x=10, y=90)
 
-        self.add_dltifmt = Button(self.rightw3, text="Lưu", width=12, height=1, font=('arial 18 bold'),
+        self.droplist = OptionMenu(self.rightw3,c1, 'TAI', 'MŨI','HỌNG')
+        self.droplist.pack()
+
+        self.menu = self.droplist.nametowidget(self.droplist.menuname)
+        self.menu.configure(font=('arial 28 bold'))
+        c1.set('HỌNG')
+
+        self.droplist.config(width=16,height=2,font=('arial 18 bold'))
+        self.droplist.place(x=5, y=120)
+
+        self.add_ifmt = Button(self.rightw3,text="Thêm", width=14, height=2, font=('arial 20 bold'), bg='orange',command=self.database_print111)
+        self.add_ifmt.place(x=5, y=200)
+
+        self.add_dltifmt = Button(self.rightw3, text="Lưu", width=14, height=2, font=('arial 20 bold'),
                                   bg='orange')
-        self.add_dltifmt.place(x=200, y=55)
+        self.add_dltifmt.place(x=5, y=300)
 
-        self.add_dltd = Button(self.rightw3, text="Xóa", width=12, height=1, font=('arial 18 bold'),
+        self.add_dltd = Button(self.rightw3, text="Xóa", width=14, height=2, font=('arial 20 bold'),
                                bg='orange')
-        self.add_dltd.place(x=395, y=55)
+        self.add_dltd.place(x=5, y=400)
+        scrollbary = Scrollbar(self.rightw2, orient=VERTICAL)
+        scrollbarx = Scrollbar(self.rightw2, orient=HORIZONTAL)
+        tree = ttk.Treeview(self.rightw2, columns=("Diagnostic", "Firstname"),
+                            selectmode="extended", height=500, yscrollcommand=scrollbary.set,
+                            xscrollcommand=scrollbarx.set)
+        scrollbary.config(command=tree.yview)
+        scrollbary.pack(side=RIGHT, fill=Y)
+        scrollbarx.config(command=tree.xview)
+        scrollbarx.pack(side=BOTTOM, fill=X)
+        tree.heading('Diagnostic', text="Diagnostic", anchor=W)
+        tree.heading('Firstname', text="Firstname", anchor=W)
+        tree.column('#0', stretch=NO, minwidth=0, width=0)
+        tree.column('#1', stretch=NO, minwidth=0, width=200)
+        tree.column('#2', stretch=NO, minwidth=0, width=300)
+        tree.pack()
 
-
-    def createNewWindowadd1(self, *args, **kwarg):
-        newWindowaddf2 = Toplevel(root)
-        newWindowaddf2.title("add infomation")
-        newWindowaddf2.geometry("600x350")
-
-        self.rightw2 = Frame(newWindowaddf2, width=600, height=330, bg='lightblue')
-        self.rightw2.pack(side=TOP)
-        self.rightw3 = Frame(newWindowaddf2, width=600, height=120, bg='lightblue')
-        self.rightw3.pack(side=BOTTOM)
-
-        listboxadd1 = Listbox(self.rightw2, height=12,width=40,bg="lightblue",activestyle='dotbox',font="Helvetica",fg="yellow")
-        listboxadd1.pack()
-
-        self.add_if3 = Entry(self.rightw3, font=('arial 18 bold'), width=25)
-        self.add_if3.place(x=140, y=10)
-
-        self.add_ifmt3 = Button(self.rightw3, text="Thêm", width=12, height=1, font=('arial 18 bold'), bg='orange')
-        self.add_ifmt3.place(x=5, y=55)
-
-        self.add_dltifmt3 = Button(self.rightw3, text="Lưu", width=12, height=1, font=('arial 18 bold'),
-                                  bg='orange')
-        self.add_dltifmt3.place(x=200, y=55)
-
-        self.add_dltd3 = Button(self.rightw3, text="Xóa", width=12, height=1, font=('arial 18 bold'),
-                               bg='orange')
-        self.add_dltd3.place(x=395, y=55)
+        conn = sqlite3.connect("db_member.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM `print_dt22`")
+        fetch = cursor.fetchall()
+        for data in fetch:
+            tree.insert('', 'end', values=(data))
+        cursor.close()
+        conn.close()
 
 
     def quit(self):
@@ -358,6 +396,7 @@ class Application:
     def endoscopy(self):
         class tehseencode(QDialog):
             def __init__(self):
+
                 super(tehseencode, self).__init__()
                 loadUi("untitled2.ui", self)
                 self.logic = 0
@@ -369,20 +408,16 @@ class Application:
                 self.CAPTURE_2.clicked.connect(self.f2vrec)
                 self.NEXT_2.clicked.connect(self.w1)
 
-           
+            @pyqtSlot()
             def onClicked(self):
                 self.TEXT.setText('Kindly Press "Capture Image " to Capture image')
                 cap = cv2.VideoCapture(0)
                 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-                op = cv2.VideoWriter('Sample1.avi', fourcc, 11.0, (800,600))
-
-                # while (True):
-                # print(cap.read())
+                op = cv2.VideoWriter('Sample1.avi', fourcc, 11.0, (800, 600))
                 while (cap.isOpened()):
                     ret, frame = cap.read()
-                    frame = imutils.resize(frame, width=800,height=600)
+                    frame = imutils.resize(frame, width=800, height=600)
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
 
                     if ret == True:
                         print('here')
@@ -393,11 +428,9 @@ class Application:
                             cv2.imwrite('anh\%s.png' % (self.value), frame)
                             self.logic = 1
                             self.TEXT.setText('your Image have been Saved')
-                        if  (self.logic == 3):
-                            #self.displayImage(frame, 1)
+                        if (self.logic == 3):
                             op.write(frame)
-
-                        if  (self.logic == 4):
+                        if (self.logic == 4):
                             cap.release()
                             break
 
@@ -419,18 +452,20 @@ class Application:
                 img = QImage(img, img.shape[1], img.shape[0], qformat)
                 img = img.rgbSwapped()
                 self.imgLabel.setPixmap(QPixmap.fromImage(img))
-                self.imgLabel.setAlignment(QtCore.Qt.AlignLeft| QtCore.Qt.AlignLeft)
+                self.imgLabel.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignLeft)
 
             def exitpro(self):
                 self.logic = 4
 
-
             def f2vrec(self):
                 self.logic = 3
+
             def w1(self):
 
                 window.close()
                 self.logic = 4
+
+
 
         window = tehseencode()
         window.show()
@@ -438,7 +473,6 @@ class Application:
             sys.exit(app.exec_())
         except:
             print('excitng')
-
 
 
 app = QApplication(sys.argv)
