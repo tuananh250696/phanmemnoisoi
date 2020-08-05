@@ -122,17 +122,17 @@ class Application:
                                    )
         self.bt_open_file.place(x=160, y=0)
         #
-        self.bt_save_file = Button(self.right, text="Chuyên tiếp", width=15, height=2, font=('arial 12 bold'), bg='white',
-                                   command=self.endoscopy)
-        self.bt_save_file.place(x=320, y=0)
+        #self.bt_save_file = Button(self.right, text="Chuyên tiếp", width=15, height=2, font=('arial 12 bold'), bg='white',
+        #                           command=self.endoscopy)
+        # self.bt_save_file.place(x=320, y=0)
         #
         self.bt_delele1 = Button(self.right, text="Xóa", width=15, height=2, font=('arial 12 bold'), bg='white',
                                  command=self.delete_text)
-        self.bt_delele1.place(x=480, y=0)
+        self.bt_delele1.place(x=320, y=0)
         #
         self.bt_thoat = Button(self.right, text="Đóng", width=15, height=2, font=('arial 12 bold'), bg='white',
                                command=self.add_to_cart)
-        self.bt_thoat.place(x=640, y=0)
+        self.bt_thoat.place(x=480, y=0)
 
         self.tenbenhnhan = Label(self.bottom, text="Tên bệnh nhân:", font=('arial 12 bold'), fg='black', bg='lightblue')
         self.tenbenhnhan.place(x=15, y=5)
@@ -238,6 +238,7 @@ class Application:
             conn.commit()
             # textbox insert
             tkinter.messagebox.showinfo("Success", "Successfully added to the database")
+            self.endoscopy()
 
 
     def add_to_cart(self, *args, **kwargs):
@@ -271,7 +272,6 @@ class Application:
                            (namepk, name_dt, address_pk))
             conn.commit()
             tkinter.messagebox.showinfo("Success", "Successfully added to the database")
-
 
     def add_to_bn(self, *args, **kwargs):
         addWindow = Toplevel(root)
@@ -407,6 +407,7 @@ class Application:
                 self.NEXT_3.clicked.connect(self.exitpro)
                 self.CAPTURE_2.clicked.connect(self.f2vrec)
                 self.NEXT_2.clicked.connect(self.w1)
+                self.NEXT_7.clicked.connect(self.w1)
 
             @pyqtSlot()
             def onClicked(self):
@@ -417,6 +418,7 @@ class Application:
                 while (cap.isOpened()):
                     ret, frame = cap.read()
                     frame = imutils.resize(frame, width=800, height=600)
+                    frame1 = imutils.resize(frame, width=80, height=60)
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
                     if ret == True:
@@ -424,10 +426,23 @@ class Application:
                         self.displayImage(frame, 1)
                         cv2.waitKey()
                         if (self.logic == 2):
+
+
                             self.value = self.value + 1
-                            cv2.imwrite('anh\%s.png' % (self.value), frame)
-                            self.logic = 1
+                            cv2.imwrite('anh\%s.png' % (self.value),  frame1)
                             self.TEXT.setText('your Image have been Saved')
+                            conn = sqlite3.connect("db_member.db")
+                            cursor = conn.cursor()
+
+                            with open('anh\%s.png' % (self.value) ,'rb') as f:
+                                data = f.read()
+                            cursor.execute('INSERT INTO new_employee (name,photo)  VALUES(?,?)', (self.value, data))
+                            conn.commit()
+                            cursor.close()
+                            conn.close()
+                            os.remove('anh\%s.png' % (self.value))
+                            self.logic = 1
+
                         if (self.logic == 3):
                             op.write(frame)
                         if (self.logic == 4):
@@ -465,14 +480,13 @@ class Application:
                 window.close()
                 self.logic = 4
 
-
-
         window = tehseencode()
         window.show()
         try:
             sys.exit(app.exec_())
         except:
             print('excitng')
+
 
 
 app = QApplication(sys.argv)
