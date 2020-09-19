@@ -167,7 +167,7 @@ class Ui_Dialog(object):
         self.logic = 3
 
     def w1(self):
-        # self.logic = 4
+        self.logic = 4
         window.close()
 
 app = QtWidgets.QApplication(sys.argv)
