@@ -96,10 +96,6 @@ class Ui_Dialog(object):
 
         self.SHOW.clicked.connect(self.onClicked)
         self.TEXT.setText("Kindly Press 'Show' to connect with webcam.")
-        self.CAPTURE.clicked.connect(self.CaptureClicked)
-        self.CAPTURE_2.clicked.connect(self.f2vrec)
-        self.NEXT_2.clicked.connect(self.w1)
-        self.NEXT_7.clicked.connect(self.w1)
         self.logic = 0
         self.value = 1
 
@@ -110,12 +106,17 @@ class Ui_Dialog(object):
         op = cv2.VideoWriter('Sample1.avi', fourcc, 11.0, (560, 560))
         self.value = 0
         while (cap.isOpened()):
+
             ret, frame = cap.read()
             frame = imutils.resize(frame, width=560, height=560)
             frame1 = imutils.resize(frame, width=80, height=60)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             if ret == True:
+                self.CAPTURE.clicked.connect(self.CaptureClicked)
+                self.CAPTURE_2.clicked.connect(self.f2vrec)
+                self.NEXT_2.clicked.connect(self.w1)
+                self.NEXT_7.clicked.connect(self.w1)
                 self.displayImage(frame, 1)
                 cv2.waitKey()
                 if (self.logic == 2):
