@@ -19,6 +19,9 @@ class tehseencode(QDialog):
         self.SHOW.clicked.connect(self.onClicked)
         self.TEXT.setText("Kindly Press 'Show' to connect with webcam.")
         self.CAPTURE.clicked.connect(self.CaptureClicked)
+        self.CAPTURE_2.clicked.connect(self.f2vrec)
+        self.NEXT_2.clicked.connect(self.w1)
+        self.NEXT_7.clicked.connect(self.w1
 
     @pyqtSlot()
     def onClicked(self):
