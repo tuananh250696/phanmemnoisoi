@@ -18,6 +18,7 @@ import imutils
 import shutil
 from fpdf import FPDF
 import webbrowser
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 today = date.today()
 date = datetime.datetime.now().date()
@@ -538,258 +539,336 @@ class Application:
         webbrowser.open_new(r'doccument\%s.pdf' % ("a" + str(row["id"])))
 
     def endoscopy(self):
-        class tehseencode(QDialog):
-            def __init__(self):
+        app = QtWidgets.QApplication(sys.argv)
+        app.setStyle("Fusion")
+        MainWindow = QtWidgets.QMainWindow()
+        ui = Ui_Dialog()
+        ui.setupUi(MainWindow)
+        MainWindow.show()
+        sys.exit(app.exec_())
 
-                super(tehseencode, self).__init__()
-                loadUi("untitled2.ui", self)
-                self.logic = 0
-                self.value = 1
-                self.SHOW.clicked.connect(self.onClicked)
-                self.TEXT.setText("Kindly Press 'Show' to connect with webcam.")
-                self.CAPTURE.clicked.connect(self.CaptureClicked)
-                self.NEXT_3.clicked.connect(self.create_pdf2)
-                self.CAPTURE_2.clicked.connect(self.f2vrec)
-                self.NEXT_2.clicked.connect(self.w1)
-                self.NEXT_7.clicked.connect(self.w1)
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(1366, 750)
+        self.TEXT = QtWidgets.QTextBrowser(Dialog)
+        self.TEXT.setGeometry(QtCore.QRect(10, 470, 191, 251))
+        self.TEXT.setObjectName("TEXT")
+        self.imgLabel = QtWidgets.QLabel(Dialog)
+        self.imgLabel.setGeometry(QtCore.QRect(210, 120, 871, 621))
+        self.imgLabel.setAutoFillBackground(False)
+        self.imgLabel.setFrameShape(QtWidgets.QFrame.Box)
+        self.imgLabel.setText("")
+        self.imgLabel.setObjectName("imgLabel")
+        self.SHOW = QtWidgets.QPushButton(Dialog)
+        self.SHOW.setGeometry(QtCore.QRect(10, 140, 191, 81))
+        self.SHOW.setObjectName("SHOW")
+        self.CAPTURE = QtWidgets.QPushButton(Dialog)
+        self.CAPTURE.setGeometry(QtCore.QRect(10, 220, 191, 81))
+        self.CAPTURE.setObjectName("CAPTURE")
+        self.NEXT = QtWidgets.QPushButton(Dialog)
+        self.NEXT.setGeometry(QtCore.QRect(680, 40, 161, 81))
+        self.NEXT.setObjectName("NEXT")
+        self.imgLabel_2 = QtWidgets.QLabel(Dialog)
+        self.imgLabel_2.setGeometry(QtCore.QRect(0, 0, 1922, 41))
+        self.imgLabel_2.setAutoFillBackground(False)
+        self.imgLabel_2.setFrameShape(QtWidgets.QFrame.Box)
+        self.imgLabel_2.setText("")
+        self.imgLabel_2.setPixmap(QtGui.QPixmap("ngang2.png"))
+        self.imgLabel_2.setObjectName("imgLabel_2")
+        self.imgLabel_3 = QtWidgets.QLabel(Dialog)
+        self.imgLabel_3.setGeometry(QtCore.QRect(1080, 40, 271, 701))
+        self.imgLabel_3.setAutoFillBackground(False)
+        self.imgLabel_3.setFrameShape(QtWidgets.QFrame.Box)
+        self.imgLabel_3.setText("")
+        self.imgLabel_3.setObjectName("imgLabel_3")
+        self.NEXT_2 = QtWidgets.QPushButton(Dialog)
+        self.NEXT_2.setGeometry(QtCore.QRect(0, 40, 181, 81))
+        self.NEXT_2.setObjectName("NEXT_2")
+        self.NEXT_4 = QtWidgets.QPushButton(Dialog)
+        self.NEXT_4.setGeometry(QtCore.QRect(180, 40, 171, 81))
+        self.NEXT_4.setObjectName("NEXT_4")
+        self.NEXT_5 = QtWidgets.QPushButton(Dialog)
+        self.NEXT_5.setGeometry(QtCore.QRect(350, 40, 171, 81))
+        self.NEXT_5.setObjectName("NEXT_5")
+        self.CAPTURE_2 = QtWidgets.QPushButton(Dialog)
+        self.CAPTURE_2.setGeometry(QtCore.QRect(10, 300, 191, 81))
+        self.CAPTURE_2.setObjectName("CAPTURE_2")
+        self.CAPTURE_3 = QtWidgets.QPushButton(Dialog)
+        self.CAPTURE_3.setGeometry(QtCore.QRect(520, 40, 161, 81))
+        self.CAPTURE_3.setObjectName("CAPTURE_3")
+        self.NEXT_3 = QtWidgets.QPushButton(Dialog)
+        self.NEXT_3.setGeometry(QtCore.QRect(10, 380, 191, 81))
+        self.NEXT_3.setObjectName("NEXT_3")
+        self.NEXT_7 = QtWidgets.QPushButton(Dialog)
+        self.NEXT_7.setGeometry(QtCore.QRect(840, 40, 161, 81))
+        self.NEXT_7.setObjectName("NEXT_7")
+        self.TEXT.raise_()
+        self.imgLabel.raise_()
+        self.SHOW.raise_()
+        self.NEXT.raise_()
+        self.imgLabel_3.raise_()
+        self.NEXT_2.raise_()
+        self.NEXT_4.raise_()
+        self.NEXT_5.raise_()
+        self.imgLabel_2.raise_()
+        self.CAPTURE.raise_()
+        self.CAPTURE_2.raise_()
+        self.CAPTURE_3.raise_()
+        self.NEXT_3.raise_()
+        self.NEXT_7.raise_()
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.SHOW.setText(_translate("Dialog", "Show"))
+        self.CAPTURE.setText(_translate("Dialog", "Capture"))
+        self.NEXT.setText(_translate("Dialog", "Zomm-"))
+        self.NEXT_2.setText(_translate("Dialog", "Chọn thiết bị"))
+        self.NEXT_4.setText(_translate("Dialog", "Tùy chọn"))
+        self.NEXT_5.setText(_translate("Dialog", "Thêm mới"))
+        self.CAPTURE_2.setText(_translate("Dialog", "VideoRecoder"))
+        self.CAPTURE_3.setText(_translate("Dialog", "Zoom+"))
+        self.NEXT_3.setText(_translate("Dialog", "IN PHIẾU KHÁM"))
+        self.NEXT_7.setText(_translate("Dialog", "Đóng"))
+        self.logic = 0
+        self.value = 1
+        self.SHOW.clicked.connect(self.onClicked)
+        self.TEXT.setText("Kindly Press 'Show' to connect with webcam.")
+        self.CAPTURE.clicked.connect(self.CaptureClicked)
+        self.NEXT_3.clicked.connect(self.create_pdf2)
+        self.CAPTURE_2.clicked.connect(self.f2vrec)
+        self.NEXT_2.clicked.connect(self.w1)
+        self.NEXT_7.clicked.connect(self.w1)
 
-            @pyqtSlot()
-            def onClicked(self):
-                self.TEXT.setText('Kindly Press "Capture Image " to Capture image')
-                cap = cv2.VideoCapture(0)
-                fourcc = cv2.VideoWriter_fourcc(*'XVID')
-                op = cv2.VideoWriter('Sample1.avi', fourcc, 11.0, (560, 560))
-                self.value=0
-                while (cap.isOpened()):
-                    ret, frame = cap.read()
-                    frame = imutils.resize(frame, width=560, height=560)
-                    frame1 = imutils.resize(frame, width=80, height=60)
-                    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    def onClicked(self):
+        self.TEXT.setText('Kindly Press "Capture Image " to Capture image')
+        cap = cv2.VideoCapture(0)
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        op = cv2.VideoWriter('Sample1.avi', fourcc, 11.0, (560, 560))
+        self.value = 0
+        while (cap.isOpened()):
+            ret, frame = cap.read()
+            frame = imutils.resize(frame, width=560, height=560)
+            frame1 = imutils.resize(frame, width=80, height=60)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-                    if ret == True:
-                        self.displayImage(frame, 1)
+            if ret == True:
+                self.displayImage(frame, 1)
 
-                        cv2.waitKey()
-                        if (self.logic == 2):
-                            self.value = self.value + 1
-                            conn = sqlite3.connect("db_member.db")
-                            conn.row_factory = sqlite3.Row
-                            cur = conn.cursor()
-                            cur.execute("SELECT max(id) FROM member")
-                            rows = cur.fetchall()
-                            directory = "anh/"
-                            if not os.path.exists(directory):
-                                os.makedirs(directory)
-                            for row in rows:
-                                print("%s" % (row["max(id)"]))
-                            cv2.imwrite('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(self.value)), frame1)
-                            self.TEXT.setText('your Image have been Saved')
+                cv2.waitKey()
+                if (self.logic == 2):
+                    self.value = self.value + 1
+                    conn = sqlite3.connect("db_member.db")
+                    conn.row_factory = sqlite3.Row
+                    cur = conn.cursor()
+                    cur.execute("SELECT max(id) FROM member")
+                    rows = cur.fetchall()
+                    directory = "anh/"
+                    if not os.path.exists(directory):
+                        os.makedirs(directory)
+                    for row in rows:
+                        print("%s" % (row["max(id)"]))
+                    cv2.imwrite('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(self.value)), frame1)
+                    self.TEXT.setText('your Image have been Saved')
 
-                            conn.commit()
-                            conn.close()
-                            self.logic = 1
+                    conn.commit()
+                    conn.close()
+                    self.logic = 1
 
-                        if (self.logic == 3):
-                            op.write(frame)
-                        if (self.logic == 4):
-                            cap.release()
-                            break
+                if (self.logic == 3):
+                    op.write(frame)
+                if (self.logic == 4):
+                    cap.release()
+                    break
 
-                    else:
-                        print('not found')
-                cap.release()
-                cv2.destroyAllWindows()
+            else:
+                print('not found')
+        cap.release()
+        cv2.destroyAllWindows()
 
-            def CaptureClicked(self):
-                self.logic = 2
+    def CaptureClicked(self):
+        self.logic = 2
 
-            def displayImage(self, img, window=1):
-                qformat = QImage.Format_Indexed8
-                if len(img.shape) == 3:
-                    if (img.shape[2]) == 4:
-                        qformat = QImage.Format_RGBA888
-                    else:
-                        qformat = QImage.Format_RGB888
-                img = QImage(img, img.shape[1], img.shape[0], qformat)
-                img = img.rgbSwapped()
-                self.imgLabel.setPixmap(QPixmap.fromImage(img))
-                self.imgLabel.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignLeft)
+    def displayImage(self, img, window=1):
+        qformat = QImage.Format_Indexed8
+        if len(img.shape) == 3:
+            if (img.shape[2]) == 4:
+                qformat = QImage.Format_RGBA888
+            else:
+                qformat = QImage.Format_RGB888
+        img = QImage(img, img.shape[1], img.shape[0], qformat)
+        img = img.rgbSwapped()
+        self.imgLabel.setPixmap(QPixmap.fromImage(img))
+        self.imgLabel.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignLeft)
+
+    def f2vrec(self):
+        self.logic = 3
+
+    def w1(self):
+        # self.logic = 4
+        window.close()
+
+    def create_pdf2(self):
+        # Set up a logo
+        conn = sqlite3.connect("db_member.db")
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT max(id) FROM member")
+        rows = cur.fetchall()
+        for row in rows:
+            print("%s" % (row["max(id)"]))
+
+        cur2 = conn.cursor()
+        cur2.execute("SELECT name_pk FROM print_dt")
+        cur3 = conn.cursor()
+        cur3.execute("SELECT address FROM print_dt")
+        cur4 = conn.cursor()
+        cur4.execute("SELECT dt_name FROM print_dt")
+        cur5 = conn.cursor()
+        cur5.execute("SELECT * FROM `member`")
+
+        rows5 = cur5.fetchall()
+        rows4 = cur4.fetchall()
+        rows3 = cur3.fetchall()
+        rows2 = cur2.fetchall()
+
+        for row5 in rows5:
+            row5[6]
+        for row2 in rows2:
+            row2["name_pk"]
+
+        for row3 in rows3:
+            row3["address"]
+
+        for row4 in rows4:
+            row4["dt_name"]
+
+        t = row2["name_pk"]
+        t1 = row3["address"]
+        t2 = "BS: " + row4["dt_name"]
+
+        pdf = FPDF()
+        pdf.set_font("Arial", size=12)
+        pdf.add_page()
+
+        pdf.image('demo.png', 8, 10, 25)
+        pdf.add_font('DejaVu', '', 'DejaVuSerif-Italic.ttf', uni=True)
+        pdf.set_font('DejaVu', '', 16)
+        pdf.set_text_color(0, 70, 255)
+        pdf.cell(35)
+        pdf.cell(0, 5, t, ln=1)
+        pdf.set_font('DejaVu', '', 14)
+
+        pdf.cell(70)
+        pdf.cell(0, 10, t2, ln=1)
+        pdf.set_font('DejaVu', '', 14)
+        pdf.set_text_color(0, 70, 255)
+        pdf.cell(30)
+
+        pdf.cell(0, 0, "ĐC:", ln=1)
+        pdf.set_font('DejaVu', '', 12)
+        pdf.set_text_color(0, 0, 0)
+        pdf.cell(40)
+        pdf.cell(0, 0, t1, ln=1)
+        pdf.set_draw_color(0, 0, 0)
+        pdf.set_line_width(1)
+        pdf.line(30, 30, 180, 30)
+
+        pdf.set_font('DejaVu', '', 16)
+        pdf.set_text_color(255, 0, 40)
+        pdf.cell(35)
+        pdf.cell(0, 5, ' ', ln=1)
+
+        pdf.set_font('DejaVu', '', 16)
+        pdf.set_text_color(255, 0, 40)
+        pdf.cell(35)
+        pdf.cell(0, 15, 'PHIẾU KHÁM NỘI SOI TAI-MŨI-HỌNG', ln=1)
+
+        pdf.set_font('DejaVu', '', 12)
+        pdf.set_text_color(0, 70, 255)
+        pdf.cell(75)
+        pdf.cell(0, 0, 'Số Phiếu : ' + str(row5[0]), ln=1)
+
+        pdf.set_font('DejaVu', '', 16)
+        pdf.set_text_color(0, 70, 255)
+        pdf.cell(0, 8, ' ', ln=1)
+
+        pdf.set_font('DejaVu', '', 10)
+        pdf.cell(5)
+        pdf.cell(0, 0, 'Tên bệnh nhân : ' + str(row5[1]), ln=1)
+        pdf.cell(85)
+        pdf.cell(0, 0, 'Tuổi : ' + str(row5[4]), ln=1)
+        pdf.cell(135)
+        pdf.cell(0, 0, 'Giới tính : ' + str(row5[6]), ln=1)
+
+        pdf.set_font('DejaVu', '', 10)
+        pdf.set_text_color(0, 70, 255)
+        pdf.cell(0, 8, ' ', ln=1)
+        pdf.cell(5)
+        pdf.cell(0, 0, 'Địa chỉ : ' + str(row5[3]), ln=1)
+        pdf.cell(85)
+        pdf.cell(0, 0, 'Số bảo hiểm : ' + str(row5[7]), ln=1)
+        pdf.cell(135)
+        pdf.cell(0, 0, 'Nghề nghiệp : ' + str(row5[2]), ln=1)
+
+        pdf.set_font('DejaVu', '', 10)
+        pdf.set_text_color(0, 70, 255)
+        pdf.cell(0, 8, ' ', ln=1)
+        pdf.cell(5)
+        pdf.cell(0, 0, 'Triệu chứng : ' + str(row5[5]), ln=1)
+        pdf.cell(85)
+        pdf.cell(0, 0, 'Điện thoại: ' + str(row5[8]), ln=1)
+
+        pdf.set_font('DejaVu', '', 14)
+        pdf.cell(0, 15, ' ', ln=1)
+        pdf.cell(70)
+        pdf.cell(0, 0, 'HÌNH ẢNH NỘI SOI ', ln=1)
+        #
+        file_name = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(2)))
+        file_name1 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(3)))
+        file_name2 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(4)))
+        file_name3 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(5)))
+        file_name4 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(6)))
+        file_name5 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(7)))
+        #
+        pdf.image(file_name, 12, 90, 60)
+        pdf.image(file_name1, 12, 150, 60)
+        pdf.image(file_name2, 74, 90, 60)
+        pdf.image(file_name3, 74, 150, 60)
+        pdf.image(file_name4, 136, 90, 60)
+        pdf.image(file_name5, 136, 150, 60)
+
+        pdf.set_font('DejaVu', '', 16)
+        pdf.cell(0, 132, ' ', ln=1)
+        pdf.cell(60)
+        pdf.cell(0, 0, 'MÔ TẢ KẾT QUẢ NỘI SOI ', ln=1)
+        pdf.set_font('DejaVu', '', 12)
+        pdf.cell(0, 8, ' ', ln=1)
+        pdf.cell(12)
+        pdf.cell(0, 7, 'Chẩn đoán : ', ln=1)
+        pdf.cell(12)
+        pdf.cell(0, 7, 'Điều trị : ', ln=1)
+        pdf.cell(12)
+        pdf.cell(0, 7, 'Chỉ định bác sĩ : ', ln=1)
+
+        pdf.set_x(120)
+        pdf.cell(0, 10, " Ngày " + str(today.day) + " Tháng " + str(today.month) + " Năm " + str(today.year),
+                 ln=1)
+        pdf.set_x(145)
+        pdf.cell(0, 6, 'Bác sĩ : ', ln=1)
+        pdf.cell(0, 15, ' ', ln=1)
+        pdf.set_x(126)
+        pdf.cell(0, 0, t2, ln=1)
+        directory1 = "doccument/"
+        if not os.path.exists(directory1):
+            os.makedirs(directory1)
+        pdf.output('doccument\%s.pdf' % ("a" + str(row["max(id)"])))
+        webbrowser.open_new(r'doccument\%s.pdf' % ("a" + str(row["max(id)"])))
+        conn.commit()
+        cur.close()
 
 
-            def f2vrec(self):
-                self.logic = 3
-
-            def w1(self):
-                #self.logic = 4
-                window.close()
-
-            def create_pdf2(self):
-                # Set up a logo
-                conn = sqlite3.connect("db_member.db")
-                conn.row_factory = sqlite3.Row
-                cur = conn.cursor()
-                cur.execute("SELECT max(id) FROM member")
-                rows = cur.fetchall()
-                for row in rows:
-                    print("%s" % (row["max(id)"]))
-
-                cur2 = conn.cursor()
-                cur2.execute("SELECT name_pk FROM print_dt")
-                cur3 = conn.cursor()
-                cur3.execute("SELECT address FROM print_dt")
-                cur4 = conn.cursor()
-                cur4.execute("SELECT dt_name FROM print_dt")
-                cur5 = conn.cursor()
-                cur5.execute("SELECT * FROM `member`")
-
-                rows5 = cur5.fetchall()
-                rows4 = cur4.fetchall()
-                rows3 = cur3.fetchall()
-                rows2 = cur2.fetchall()
-
-                for row5 in rows5:
-                    row5[6]
-                for row2 in rows2:
-                    row2["name_pk"]
-
-                for row3 in rows3:
-                    row3["address"]
-
-                for row4 in rows4:
-                    row4["dt_name"]
 
 
-
-                t = row2["name_pk"]
-                t1 = row3["address"]
-                t2 = "BS: " + row4["dt_name"]
-
-                pdf = FPDF()
-                pdf.set_font("Arial", size=12)
-                pdf.add_page()
-
-                pdf.image('demo.png', 8, 10, 25)
-                pdf.add_font('DejaVu', '', 'DejaVuSerif-Italic.ttf', uni=True)
-                pdf.set_font('DejaVu', '', 16)
-                pdf.set_text_color(0, 70, 255)
-                pdf.cell(35)
-                pdf.cell(0, 5, t, ln=1)
-                pdf.set_font('DejaVu', '', 14)
-
-                pdf.cell(70)
-                pdf.cell(0, 10, t2, ln=1)
-                pdf.set_font('DejaVu', '', 14)
-                pdf.set_text_color(0, 70, 255)
-                pdf.cell(30)
-
-                pdf.cell(0, 0, "ĐC:", ln=1)
-                pdf.set_font('DejaVu', '', 12)
-                pdf.set_text_color(0, 0, 0)
-                pdf.cell(40)
-                pdf.cell(0, 0, t1, ln=1)
-                pdf.set_draw_color(0, 0, 0)
-                pdf.set_line_width(1)
-                pdf.line(30, 30, 180, 30)
-
-                pdf.set_font('DejaVu', '', 16)
-                pdf.set_text_color(255, 0, 40)
-                pdf.cell(35)
-                pdf.cell(0, 5, ' ', ln=1)
-
-                pdf.set_font('DejaVu', '', 16)
-                pdf.set_text_color(255, 0, 40)
-                pdf.cell(35)
-                pdf.cell(0, 15, 'PHIẾU KHÁM NỘI SOI TAI-MŨI-HỌNG', ln=1)
-
-                pdf.set_font('DejaVu', '', 12)
-                pdf.set_text_color(0, 70, 255)
-                pdf.cell(75)
-                pdf.cell(0, 0, 'Số Phiếu : ' + str(row5[0]), ln=1)
-
-                pdf.set_font('DejaVu', '', 16)
-                pdf.set_text_color(0, 70, 255)
-                pdf.cell(0, 8, ' ', ln=1)
-
-                pdf.set_font('DejaVu', '', 10)
-                pdf.cell(5)
-                pdf.cell(0, 0, 'Tên bệnh nhân : ' + str(row5[1]), ln=1)
-                pdf.cell(85)
-                pdf.cell(0, 0, 'Tuổi : ' + str(row5[4]), ln=1)
-                pdf.cell(135)
-                pdf.cell(0, 0, 'Giới tính : ' + str(row5[6]), ln=1)
-
-                pdf.set_font('DejaVu', '', 10)
-                pdf.set_text_color(0, 70, 255)
-                pdf.cell(0, 8, ' ', ln=1)
-                pdf.cell(5)
-                pdf.cell(0, 0, 'Địa chỉ : ' + str(row5[3]), ln=1)
-                pdf.cell(85)
-                pdf.cell(0, 0, 'Số bảo hiểm : ' + str(row5[7]), ln=1)
-                pdf.cell(135)
-                pdf.cell(0, 0, 'Nghề nghiệp : ' + str(row5[2]), ln=1)
-
-                pdf.set_font('DejaVu', '', 10)
-                pdf.set_text_color(0, 70, 255)
-                pdf.cell(0, 8, ' ', ln=1)
-                pdf.cell(5)
-                pdf.cell(0, 0, 'Triệu chứng : ' + str(row5[5]), ln=1)
-                pdf.cell(85)
-                pdf.cell(0, 0, 'Điện thoại: ' + str(row5[8]), ln=1)
-
-                pdf.set_font('DejaVu', '', 14)
-                pdf.cell(0, 15, ' ', ln=1)
-                pdf.cell(70)
-                pdf.cell(0, 0, 'HÌNH ẢNH NỘI SOI ', ln=1)
-                #
-                file_name =  ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(2)))
-                file_name1 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(3)))
-                file_name2 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(4)))
-                file_name3 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(5)))
-                file_name4 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(6)))
-                file_name5 = ('anh\%s.png' % ("a" + str(row["max(id)"]) + "a" + str(7)))
-                #
-                pdf.image(file_name, 12, 90, 60)
-                pdf.image(file_name1, 12, 150, 60)
-                pdf.image(file_name2, 74, 90, 60)
-                pdf.image(file_name3, 74, 150, 60)
-                pdf.image(file_name4, 136, 90, 60)
-                pdf.image(file_name5, 136, 150, 60)
-
-                pdf.set_font('DejaVu', '', 16)
-                pdf.cell(0, 132, ' ', ln=1)
-                pdf.cell(60)
-                pdf.cell(0, 0, 'MÔ TẢ KẾT QUẢ NỘI SOI ', ln=1)
-                pdf.set_font('DejaVu', '', 12)
-                pdf.cell(0, 8, ' ', ln=1)
-                pdf.cell(12)
-                pdf.cell(0, 7, 'Chẩn đoán : ', ln=1)
-                pdf.cell(12)
-                pdf.cell(0, 7, 'Điều trị : ', ln=1)
-                pdf.cell(12)
-                pdf.cell(0, 7, 'Chỉ định bác sĩ : ', ln=1)
-
-                pdf.set_x(120)
-                pdf.cell(0, 10, " Ngày " + str(today.day) + " Tháng " + str(today.month) + " Năm " + str(today.year),
-                         ln=1)
-                pdf.set_x(145)
-                pdf.cell(0, 6, 'Bác sĩ : ', ln=1)
-                pdf.cell(0, 15, ' ', ln=1)
-                pdf.set_x(126)
-                pdf.cell(0, 0, t2, ln=1)
-                directory1 = "doccument/"
-                if not os.path.exists(directory1):
-                    os.makedirs(directory1)
-                pdf.output('doccument\%s.pdf' %("a" + str(row["max(id)"])))
-                webbrowser.open_new(r'doccument\%s.pdf' %("a" + str(row["max(id)"])))
-                conn.commit()
-                cur.close()
-
-        window = tehseencode()
-        window.show()
-        try:
-            sys.exit(app.exec_())
-        except:
-            print('excitng')
 
 
 app = QApplication(sys.argv)
